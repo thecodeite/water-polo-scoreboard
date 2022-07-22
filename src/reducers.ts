@@ -79,10 +79,12 @@ export function reduceState(events: GameEventWithMatchTime[]) {
     white: {
       goals: 0,
       penelties: [],
+      replaced: [],
     },
     blue: {
       goals: 0,
       penelties: [],
+      replaced: [],
     },
   };
 
@@ -134,6 +136,43 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             ],
           },
         };
+      case 'replacement':
+        const oldTsRep = oldState[event.team];
+        return {
+          ...oldState,
+          [event.team]: {
+            ...oldTsRep,
+            penelties: [
+              ...oldTsRep.penelties,
+              {
+                id: event.id,
+                cap: event.cap,
+                start: event.matchTime,
+                end: event.matchTime + 20000,
+              },
+            ],
+            replaced: [...oldTsRep.replaced, event.cap],
+          },
+        };
+      case 'brutality':
+        const oldTsBrute = oldState[event.team];
+        return {
+          ...oldState,
+          [event.team]: {
+            ...oldTsBrute,
+            penelties: [
+              ...oldTsBrute.penelties,
+              {
+                id: event.id,
+                cap: event.cap,
+                start: event.matchTime,
+                end: event.matchTime + 4 * 60000,
+              },
+            ],
+            replaced: [...oldTsBrute.replaced, event.cap],
+          },
+        };
+
       default:
         return oldState;
     }

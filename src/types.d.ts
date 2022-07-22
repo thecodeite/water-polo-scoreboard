@@ -8,6 +8,11 @@ interface GameEventBase {
   cap?: number;
 }
 
+interface GameEventCap extends GameEventBase {
+  team: Team;
+  cap: number;
+}
+
 interface MatchStartEvent extends GameEventBase {
   name: 'match-start';
 }
@@ -18,19 +23,30 @@ interface MatchResumeEvent extends GameEventBase {
   name: 'match-resume';
 }
 
-interface GoalScoredEvent extends GameEventBase {
+interface GoalScoredEvent extends GameEventCap {
   name: 'goal-scored';
-  team: Team;
-  cap: number;
 }
 
-interface PeneltyEvent extends GameEventBase {
+interface PeneltyEvent extends GameEventCap {
   name: 'penelty';
-  team: Team;
-  cap: number;
 }
 
-type GameEvent = MatchStartEvent | MatchPauseEvent | MatchResumeEvent | GoalScoredEvent | PeneltyEvent;
+interface ReplacementEvent extends GameEventCap {
+  name: 'replacement';
+}
+
+interface BrutalityEvent extends GameEventCap {
+  name: 'brutality';
+}
+
+type GameEvent =
+  | MatchStartEvent
+  | MatchPauseEvent
+  | MatchResumeEvent
+  | GoalScoredEvent
+  | PeneltyEvent
+  | ReplacementEvent
+  | BrutalityEvent;
 
 type GameEventWithMatchTime = GameEvent & { matchTime: number };
 
@@ -44,6 +60,7 @@ interface Penelty {
 interface TeamStats {
   goals: number;
   penelties: Penelty[];
+  replaced: number[];
 }
 
 interface GlobalState {

@@ -31,6 +31,7 @@ export function resumeMatch(): MatchResumeEvent {
     timestamp: stamp(),
   };
 }
+
 export function goalScored(team: Team, cap: number): GoalScoredEvent {
   return {
     id: nextId(),
@@ -44,6 +45,26 @@ export function capPenelty(team: Team, cap: number): PeneltyEvent {
   return {
     id: nextId(),
     name: 'penelty',
+    timestamp: stamp(),
+    team,
+    cap,
+  };
+}
+
+export function capReplacement(team: Team, cap: number): ReplacementEvent {
+  return {
+    id: nextId(),
+    name: 'replacement',
+    timestamp: stamp(),
+    team,
+    cap,
+  };
+}
+
+export function capBrutality(team: Team, cap: number): BrutalityEvent {
+  return {
+    id: nextId(),
+    name: 'brutality',
     timestamp: stamp(),
     team,
     cap,

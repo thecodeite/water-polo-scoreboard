@@ -45,16 +45,27 @@ function TeamStats({ clock, title, teamStats }: { clock: number; title: string; 
     <div>
       <h2>{title}</h2>
       <div className="ScorerScreen-score">{teamStats.goals}</div>
-      <ul>
-        {pens.map((pen) => (
-          <li key={pen.id}>
-            {pen.cap} - 0:
-            {Math.floor(pen.t / 1000)
-              .toString()
-              .padStart(2, '0')}
-          </li>
-        ))}
-      </ul>
+      {pens.length > 0 ? (
+        <>
+          <div>Penelties</div>
+          <ul>
+            {pens.map((pen) => (
+              <li key={pen.id}>
+                {pen.cap} - {formatTime(pen.t)}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : undefined}
+      {teamStats.replaced.length > 0 ? <div>Replaced: {teamStats.replaced.join()}</div> : undefined}
     </div>
   );
+}
+
+function formatTime(ms: number) {
+  const mins = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000)
+    .toString()
+    .padStart(2, '0');
+  return `${mins}:${seconds}`;
 }
