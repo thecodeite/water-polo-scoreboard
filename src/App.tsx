@@ -1,24 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.scss';
+import { ScorerScreen } from './components/ScorerScreen';
+import { GlobalControls } from './components/GlobalControls';
+import { TeamControls } from './components/TeamControls';
+import { EventLog } from './components/EventLog';
+import { reduceState, withMatchTime } from './reducers';
 
 function App() {
+  const [events, setEvents] = useState<GameEvent[]>([]);
+  const eventsWithMatchTime = withMatchTime(events);
+  const globalState = reduceState(eventsWithMatchTime);
+  const addEvent = (newEvent: GameEvent) => setEvents((oldEvents) => [...oldEvents, newEvent]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ScorerScreen globalState={globalState} />
+      <GlobalControls globalState={globalState} addEvent={addEvent} />
+      <TeamControls globalState={globalState} addEvent={addEvent} />
+      <EventLog events={eventsWithMatchTime} />
+      <pre>{JSON.stringify(globalState, null, '  ')}</pre>
     </div>
   );
 }
