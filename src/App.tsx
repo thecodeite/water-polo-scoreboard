@@ -11,8 +11,16 @@ function App() {
   const eventsWithMatchTime = withMatchTime(events);
   const globalState = reduceState(eventsWithMatchTime);
   const addEvent = (newEvent: GameEvent) => setEvents((oldEvents) => [...oldEvents, newEvent]);
+
+  const reset = () => {
+    setEvents([]);
+  };
+
   return (
     <div className="App">
+      <div>
+        <button onClick={() => reset()}>Reset</button>
+      </div>
       <ScorerScreen globalState={globalState} />
       <GlobalControls globalState={globalState} addEvent={addEvent} />
       <TeamControls globalState={globalState} addEvent={addEvent} />
