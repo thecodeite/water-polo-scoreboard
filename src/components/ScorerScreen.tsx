@@ -15,7 +15,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
     return () => clearInterval(h);
   }, [timeBeforePause, unPausedAt]);
 
-  const timeLeftSigned = 1 * 60 * 1000 - clock;
+  const timeLeftSigned = 8 * 60 * 1000 - clock;
   const sign = timeLeftSigned < 0 ? '-' : '';
   const timeLeft = Math.abs(timeLeftSigned);
   const minutes = Math.floor(timeLeft / 60000).toString();
