@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { capPenelty, capReplacement, goalScored, capBrutality } from '../events';
+import { Led } from './Led';
 
 export function TeamControls({
   globalState,
@@ -44,25 +45,41 @@ function SingleTeamControls({
     setMultiEvent('');
   };
 
+  const pressAction = {
+    '': 'penelty for',
+    goal: 'goal scored by',
+    replacement: 'replacement fo',
+    brutality: 'brutality replacement for',
+  }[multiEvent];
+
   return (
     <div className="SingleTeamControls">
       <h1>{team}</h1>
       <div>
         {caps.map((cap) => (
-          <div key={`cap-${cap}`}>
-            <button onClick={() => tapCap(cap)}>Cap {cap}</button>
+          <div>
+            <label key={`cap-${cap}`}>
+              Press to record {pressAction} <button onClick={() => tapCap(cap)}>Cap {cap}</button>
+            </label>
           </div>
         ))}
       </div>
       <hr />
       <div>
-        <button onClick={() => setMultiEvent('goal')}>Goal</button>
+        <Led on={multiEvent === 'goal'} />
+        <button onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>Goal</button>
       </div>
       <div>
-        <button onClick={() => setMultiEvent('replacement')}>Replacement</button>
+        <Led on={multiEvent === 'replacement'} />
+        <button onClick={() => setMultiEvent((existing) => (existing !== 'replacement' ? 'replacement' : ''))}>
+          Replacement
+        </button>
       </div>
       <div>
-        <button onClick={() => setMultiEvent('brutality')}>Brutality</button>
+        <Led on={multiEvent === 'brutality'} />
+        <button onClick={() => setMultiEvent((existing) => (existing !== 'brutality' ? 'brutality' : ''))}>
+          Brutality
+        </button>
       </div>
     </div>
   );
