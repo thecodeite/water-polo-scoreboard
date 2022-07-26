@@ -15,7 +15,9 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
     return () => clearInterval(h);
   }, [timeBeforePause, unPausedAt]);
 
-  const timeLeft = 8 * 60 * 1000 - clock;
+  const timeLeftSigned = 1 * 60 * 1000 - clock;
+  const sign = timeLeftSigned < 0 ? '-' : '';
+  const timeLeft = Math.abs(timeLeftSigned);
   const minutes = Math.floor(timeLeft / 60000).toString();
   const seconds = Math.floor((timeLeft % 60000) / 1000)
     .toString()
@@ -25,7 +27,8 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
   return (
     <div className="ScorerScreen">
       <div>
-        Match Time: {minutes}:{seconds}.{tenths}
+        Match Time: {sign}
+        {minutes}:{seconds}.{tenths}
       </div>
       <div className="ScorerScreen-teams">
         <TeamStats clock={clock} title={'White'} teamStats={globalState.white} />

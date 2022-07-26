@@ -17,7 +17,7 @@ function App() {
       <GlobalControls globalState={globalState} addEvent={addEvent} />
       <TeamControls globalState={globalState} addEvent={addEvent} />
       <EventLog events={eventsWithMatchTime} />
-      <pre>{JSON.stringify(globalState, null, '  ')}</pre>
+      {/* <pre>{JSON.stringify(globalState, null, '  ')}</pre> */}
     </div>
   );
 }

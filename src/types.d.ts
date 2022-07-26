@@ -5,12 +5,12 @@ interface GameEventBase {
   name: string;
   timestamp: number;
   team?: Team;
-  cap?: number;
+  cap?: string;
 }
 
 interface GameEventCap extends GameEventBase {
   team: Team;
-  cap: number;
+  cap: string;
 }
 
 interface MatchStartEvent extends GameEventBase {

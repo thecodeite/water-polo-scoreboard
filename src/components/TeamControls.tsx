@@ -16,7 +16,8 @@ export function TeamControls({
   );
 }
 
-const caps = Array.from({ length: 5 }, (_, i) => i + 1);
+const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'T1', 'T2', 'M'];
+//const caps = Array.from({ length: 15 }, (_, i) => i< i + 1);
 type MultiEvent = '' | 'goal' | 'replacement' | 'brutality';
 
 function SingleTeamControls({
@@ -30,7 +31,7 @@ function SingleTeamControls({
 }) {
   const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
 
-  const tapCap = (cap: number) => {
+  const tapCap = (cap: string) => {
     if (multiEvent === '') {
       addEvent(capPenelty(team, cap));
     } else if (multiEvent === 'goal') {

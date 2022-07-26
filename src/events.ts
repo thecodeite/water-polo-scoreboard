@@ -32,7 +32,7 @@ export function resumeMatch(): MatchResumeEvent {
   };
 }
 
-export function goalScored(team: Team, cap: number): GoalScoredEvent {
+export function goalScored(team: Team, cap: string): GoalScoredEvent {
   return {
     id: nextId(),
     name: 'goal-scored',
@@ -41,7 +41,7 @@ export function goalScored(team: Team, cap: number): GoalScoredEvent {
     cap,
   };
 }
-export function capPenelty(team: Team, cap: number): PeneltyEvent {
+export function capPenelty(team: Team, cap: string): PeneltyEvent {
   return {
     id: nextId(),
     name: 'penelty',
@@ -51,7 +51,7 @@ export function capPenelty(team: Team, cap: number): PeneltyEvent {
   };
 }
 
-export function capReplacement(team: Team, cap: number): ReplacementEvent {
+export function capReplacement(team: Team, cap: string): ReplacementEvent {
   return {
     id: nextId(),
     name: 'replacement',
@@ -61,7 +61,7 @@ export function capReplacement(team: Team, cap: number): ReplacementEvent {
   };
 }
 
-export function capBrutality(team: Team, cap: number): BrutalityEvent {
+export function capBrutality(team: Team, cap: string): BrutalityEvent {
   return {
     id: nextId(),
     name: 'brutality',
