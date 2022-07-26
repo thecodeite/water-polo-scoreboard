@@ -1,5 +1,7 @@
 import React from 'react';
-import { pauseMatch, resumeMatch, startMatch } from '../events';
+import { pauseMatch, resumeMatch, startMatch, nextQuarter } from '../events';
+
+import './GlobalControls.scss';
 
 export function GlobalControls({
   globalState,
@@ -10,15 +12,15 @@ export function GlobalControls({
 }) {
   return (
     <div className="GlobalControls">
-      <div>
-        {!globalState.matchStarted ? (
-          <button onClick={() => addEvent(startMatch())}>Start Match</button>
-        ) : globalState.unPausedAt ? (
-          <button onClick={() => addEvent(pauseMatch())}>Pause Match</button>
-        ) : (
-          <button onClick={() => addEvent(resumeMatch())}>Resume Match</button>
-        )}
-      </div>
+      {!globalState.matchStarted ? (
+        <button onClick={() => addEvent(startMatch())}>Start Match</button>
+      ) : globalState.unPausedAt ? (
+        <button onClick={() => addEvent(pauseMatch())}>Pause Match</button>
+      ) : (
+        <button onClick={() => addEvent(resumeMatch())}>Resume Match</button>
+      )}
+
+      <button onClick={() => addEvent(nextQuarter())}>Next quarter</button>
     </div>
   );
 }

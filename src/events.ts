@@ -32,6 +32,14 @@ export function resumeMatch(): MatchResumeEvent {
   };
 }
 
+export function nextQuarter(): NextQuarterEvent {
+  return {
+    id: nextId(),
+    name: 'next-quarter',
+    timestamp: stamp(),
+  };
+}
+
 export function goalScored(team: Team, cap: string): GoalScoredEvent {
   return {
     id: nextId(),

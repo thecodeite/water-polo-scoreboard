@@ -8,13 +8,15 @@ export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
       <div>Team</div>
       <div>Cap</div>
       <div>Match time</div>
+      <div>Q</div>
       {events.map((event) => (
         <React.Fragment key={event.id}>
-          <div>{event.timestamp}</div>
+          <div>{new Date(event.timestamp).toISOString()}</div>
           <div>{event.name}</div>
           <div>{event.team}</div>
           <div>{event.cap}</div>
           <div>{event.matchTime}</div>
+          <div>{event.quarter}</div>
         </React.Fragment>
       ))}
     </div>
