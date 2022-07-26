@@ -1,0 +1,14 @@
+.Led {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid black;
+  margin: 0 4px;
+  padding: 0;
+  vertical-align: middle;
+
+  &-on {
+    background-color: red;
+  }
+}
