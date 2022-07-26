@@ -16,7 +16,7 @@ export function TeamControls({
   );
 }
 
-const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'T1', 'T2', 'M'];
+const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'HC', 'AC', 'TM'];
 //const caps = Array.from({ length: 15 }, (_, i) => i< i + 1);
 type MultiEvent = '' | 'goal' | 'replacement' | 'brutality';
 
