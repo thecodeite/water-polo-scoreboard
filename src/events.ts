@@ -8,14 +8,6 @@ function nextId() {
   return `${idState}`.padStart(10, '0');
 }
 
-export function startMatch(): MatchStartEvent {
-  return {
-    id: nextId(),
-    name: 'match-start',
-    timestamp: stamp(),
-  };
-}
-
 export function pauseMatch(): MatchPauseEvent {
   return {
     id: nextId(),

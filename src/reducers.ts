@@ -10,7 +10,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
 
   const initialState: ReducerState = {
     timeBeforePause: 0,
-    startedAt: undefined,
     unPausedAt: undefined,
     pausedAt: undefined,
     period: 1,
@@ -21,21 +20,8 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
       let timeBeforePause: number;
       let matchTime: number;
       let period = oldState.period;
-      // console.log('event.name:', event.name);
+
       switch (event.name) {
-        case 'match-start':
-          if (oldState.startedAt) throw new Error('Match already started');
-          matchTime = 0;
-          timeBeforePause = 0;
-          return [
-            {
-              ...oldState,
-              timeBeforePause,
-              startedAt: event.timestamp,
-              unPausedAt: event.timestamp,
-            },
-            [...arr, { ...event, matchTime, period }],
-          ];
         case 'match-pause':
           if (oldState.pausedAt || !oldState.unPausedAt) throw new Error('Match already paused');
 
@@ -51,7 +37,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
             [...arr, { ...event, matchTime, period }],
           ];
         case 'match-resume':
-          if (!oldState.pausedAt || oldState.unPausedAt) throw new Error('Match not paused');
           matchTime = oldState.timeBeforePause;
           return [
             {
@@ -70,7 +55,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
             {
               ...oldState,
               timeBeforePause,
-              startedAt: undefined,
               unPausedAt: undefined,
               pausedAt: undefined,
               period,
@@ -110,13 +94,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
   const state = events.reduce((oldState, event) => {
     switch (event.name) {
-      case 'match-start':
-        if (oldState.matchStarted) throw new Error('Match already started');
-        return {
-          ...oldState,
-          matchStarted: true,
-          unPausedAt: event.timestamp,
-        };
       case 'next-period':
         // if (oldState.matchStarted) throw new Error('Match already started');
         return {
