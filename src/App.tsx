@@ -5,7 +5,7 @@ import { GlobalControls } from './components/GlobalControls';
 import { TeamControls } from './components/TeamControls';
 import { EventLog } from './components/EventLog';
 import { reduceState, withMatchTime } from './reducers';
-import { stamp, startMatch } from './events';
+import { pauseMatch, stamp, startMatch } from './events';
 
 function App() {
   const [events, setEvents] = useState<GameEvent[]>([]);
@@ -18,11 +18,16 @@ function App() {
   };
 
   const resetToNeop = () => {
-    const sme = {
-      ...startMatch(),
-      timestamp: stamp() - 7.5 * 60 * 1000,
-    };
-    setEvents([sme]);
+    setEvents([
+      {
+        ...startMatch(),
+        timestamp: stamp() - 7.9 * 60 * 1000,
+      },
+      {
+        ...pauseMatch(),
+        timestamp: stamp() - 1000,
+      },
+    ]);
   };
 
   return (
