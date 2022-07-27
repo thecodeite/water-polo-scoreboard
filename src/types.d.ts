@@ -71,6 +71,7 @@ type GameEvent =
 interface RelativeTiming {
   periodTime: number;
   period: number;
+  matchTime: number;
 }
 
 type GameEventWithMatchTime = GameEvent & RelativeTiming;

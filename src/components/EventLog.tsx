@@ -2,23 +2,34 @@ import React from 'react';
 
 import './EventLog.scss';
 
+function formatTime(ms: number) {
+  const mins = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000)
+    .toString()
+    .padStart(2, '0');
+
+  return `${mins}:${seconds}`;
+}
+
 export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
   return (
-    <div className="EventLog">
+    <div className="EventLog" style={{ gridTemplateColumns: 'repeat(7, auto)' }}>
       <div>Timestamp</div>
       <div>Event</div>
       <div>Team</div>
       <div>Cap</div>
       <div>Period time</div>
       <div>Period</div>
+      <div>Match time</div>
       {events.map((event) => (
         <React.Fragment key={event.id}>
           <div className={event.isVirtual ? 'v' : undefined}>{new Date(event.timestamp).toISOString()}</div>
           <div className={event.isVirtual ? 'v' : undefined}>{event.name}</div>
           <div className={event.isVirtual ? 'v' : undefined}>{event.team}</div>
           <div className={event.isVirtual ? 'v' : undefined}>{event.cap}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.periodTime}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.period}</div>
+          <div className={event.isVirtual ? 'v' : undefined}>{formatTime(event.periodTime)}</div>
+          <div className={event.isVirtual ? 'v' : undefined}>{event.period + 1}</div>
+          <div className={event.isVirtual ? 'v' : undefined}>{formatTime(event.matchTime)}</div>
         </React.Fragment>
       ))}
     </div>

@@ -2,43 +2,66 @@ import React, { useEffect, useState } from 'react';
 import { stamp } from '../events';
 import './ScorerScreen.scss';
 
+interface Times {
+  periodClock: number;
+  restClock: number;
+  exclusionClock: number;
+}
+
+export function calcTimes(timeBeforePause: number, unPausedAt: number | undefined): Times {
+  const clockDelta = unPausedAt ? stamp() - unPausedAt : 0;
+  const clock = timeBeforePause + clockDelta;
+  const timeLeftSigned = 8 * 60 * 1000 - clock;
+
+  return {
+    periodClock: timeLeftSigned > 0 ? timeLeftSigned : 0,
+    restClock: timeLeftSigned < 0 ? -timeLeftSigned : 0,
+    exclusionClock: timeLeftSigned > 0 ? clock : 8 * 60 * 1000,
+  };
+}
+
 export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
   const { timeBeforePause, unPausedAt, period } = globalState;
-  const [clock, setClock] = useState(timeBeforePause);
+  const [{ periodClock, restClock, exclusionClock }, setClock] = useState(calcTimes(timeBeforePause, unPausedAt));
 
   useEffect(() => {
-    setClock(timeBeforePause);
+    setClock(calcTimes(timeBeforePause, unPausedAt));
     const h = setInterval(() => {
-      const running = unPausedAt ? stamp() - unPausedAt : 0;
-      console.log('unPausedAt, timeBeforePause , running:', unPausedAt, timeBeforePause, running);
-      setClock(timeBeforePause + running);
+      setClock(calcTimes(timeBeforePause, unPausedAt));
     }, 50);
 
     return () => clearInterval(h);
   }, [timeBeforePause, unPausedAt]);
 
-  let timeLeftSigned = 8 * 60 * 1000 - clock;
-  const inRest = timeLeftSigned < 0;
-  if (timeLeftSigned < -2 * 60 * 1000) {
-    timeLeftSigned = -2 * 60 * 1000;
-  }
-  const timeLeft = Math.abs(timeLeftSigned);
-  const minutes = Math.floor(timeLeft / 60000).toString();
-  const seconds = Math.floor((timeLeft % 60000) / 1000)
-    .toString()
-    .padStart(2, '0');
-  const tenths = Math.floor((timeLeft % 1000) / 100).toString();
+  const tl = {
+    minutes: Math.floor(periodClock / 60000).toString(),
+    seconds: Math.floor((periodClock % 60000) / 1000)
+      .toString()
+      .padStart(2, '0'),
+    tenths: Math.floor((periodClock % 1000) / 100).toString(),
+  };
 
+  const rt = {
+    minutes: Math.floor(restClock / 60000).toString(),
+    seconds: Math.floor((restClock % 60000) / 1000)
+      .toString()
+      .padStart(2, '0'),
+    tenths: Math.floor((restClock % 1000) / 100).toString(),
+  };
   return (
     <div className="ScorerScreen">
       <div>
-        Match Time: {minutes}:{seconds}.{tenths}
+        Match Time: {tl.minutes}:{tl.seconds}.{tl.tenths}
       </div>
-      {inRest ? <div>Rest</div> : undefined}
+      {restClock > 0 ? (
+        <div>
+          Rest Time: {rt.minutes}:{rt.seconds}.{rt.tenths}{' '}
+        </div>
+      ) : undefined}
       <div>Period: {period}</div>
       <div className="ScorerScreen-teams">
-        <TeamStats clock={clock} title={'White'} teamStats={globalState.white} />
-        <TeamStats clock={clock} title={'Blue'} teamStats={globalState.blue} />
+        <TeamStats clock={exclusionClock} title={'White'} teamStats={globalState.white} />
+        <TeamStats clock={exclusionClock} title={'Blue'} teamStats={globalState.blue} />
       </div>
     </div>
   );
