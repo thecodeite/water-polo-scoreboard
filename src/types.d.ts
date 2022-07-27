@@ -22,8 +22,8 @@ interface MatchPauseEvent extends GameEventBase {
 interface MatchResumeEvent extends GameEventBase {
   name: 'match-resume';
 }
-interface NextQuarterEvent extends GameEventBase {
-  name: 'next-quarter';
+interface NextPeriodEvent extends GameEventBase {
+  name: 'next-period';
 }
 
 interface GoalScoredEvent extends GameEventCap {
@@ -46,13 +46,13 @@ type GameEvent =
   | MatchStartEvent
   | MatchPauseEvent
   | MatchResumeEvent
-  | NextQuarterEvent
+  | NextPeriodEvent
   | GoalScoredEvent
   | PeneltyEvent
   | EmsEvent
   | BrutalityEvent;
 
-type GameEventWithMatchTime = GameEvent & { matchTime: number; quarter: number };
+type GameEventWithMatchTime = GameEvent & { matchTime: number; period: number };
 
 interface Penelty {
   id: stringl;
@@ -70,7 +70,7 @@ interface TeamStats {
 interface GlobalState {
   matchStarted: boolean;
   unPausedAt?: number;
-  quarter: number;
+  period: number;
   timeBeforePause: number;
   white: TeamStats;
   blue: TeamStats;

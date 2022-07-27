@@ -4,7 +4,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     startedAt?: number;
     unPausedAt?: number;
     pausedAt?: number;
-    quarter: number;
+    period: number;
   }
   type ReducerType = [ReducerState, GameEventWithMatchTime[]];
 
@@ -13,14 +13,14 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     startedAt: undefined,
     unPausedAt: undefined,
     pausedAt: undefined,
-    quarter: 1,
+    period: 1,
   };
 
   const res = events.reduce(
     ([oldState, arr]: ReducerType, event: GameEvent): ReducerType => {
       let timeBeforePause: number;
       let matchTime: number;
-      let quarter = oldState.quarter;
+      let period = oldState.period;
       // console.log('event.name:', event.name);
       switch (event.name) {
         case 'match-start':
@@ -34,7 +34,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
               startedAt: event.timestamp,
               unPausedAt: event.timestamp,
             },
-            [...arr, { ...event, matchTime, quarter }],
+            [...arr, { ...event, matchTime, period }],
           ];
         case 'match-pause':
           if (oldState.pausedAt || !oldState.unPausedAt) throw new Error('Match already paused');
@@ -48,7 +48,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
               pausedAt: event.timestamp,
               unPausedAt: undefined,
             },
-            [...arr, { ...event, matchTime, quarter }],
+            [...arr, { ...event, matchTime, period }],
           ];
         case 'match-resume':
           if (!oldState.pausedAt || oldState.unPausedAt) throw new Error('Match not paused');
@@ -59,13 +59,13 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
               pausedAt: undefined,
               unPausedAt: event.timestamp,
             },
-            [...arr, { ...event, matchTime, quarter }],
+            [...arr, { ...event, matchTime, period }],
           ];
-        case 'next-quarter':
+        case 'next-period':
           //if (!oldState.pausedAt || oldState.unPausedAt) throw new Error('Match not paused');
           timeBeforePause = 0;
           matchTime = 0;
-          quarter += 1;
+          period += 1;
           return [
             {
               ...oldState,
@@ -73,9 +73,9 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
               startedAt: undefined,
               unPausedAt: undefined,
               pausedAt: undefined,
-              quarter,
+              period,
             },
-            [...arr, { ...event, matchTime, quarter }],
+            [...arr, { ...event, matchTime, period }],
           ];
         default:
           if (oldState.unPausedAt) {
@@ -83,7 +83,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
           } else {
             matchTime = oldState.timeBeforePause;
           }
-          return [oldState, [...arr, { ...event, matchTime, quarter }]];
+          return [oldState, [...arr, { ...event, matchTime, period }]];
       }
     },
     [initialState, []],
@@ -95,7 +95,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
   const initialState: GlobalState = {
     timeBeforePause: 0,
     matchStarted: false,
-    quarter: 1,
+    period: 1,
     white: {
       goals: 0,
       penelties: [],
@@ -117,11 +117,11 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           matchStarted: true,
           unPausedAt: event.timestamp,
         };
-      case 'next-quarter':
+      case 'next-period':
         // if (oldState.matchStarted) throw new Error('Match already started');
         return {
           ...oldState,
-          quarter: oldState.quarter + 1,
+          period: oldState.period + 1,
           timeBeforePause: 0,
           matchStarted: false,
           unPausedAt: undefined,

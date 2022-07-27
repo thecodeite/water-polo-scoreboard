@@ -3,7 +3,7 @@ import { stamp } from '../events';
 import './ScorerScreen.scss';
 
 export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
-  const { timeBeforePause, unPausedAt, quarter } = globalState;
+  const { timeBeforePause, unPausedAt, period } = globalState;
   const [clock, setClock] = useState(timeBeforePause);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
         Match Time: {sign}
         {minutes}:{seconds}.{tenths}
       </div>
-      <div>Quarter: {quarter}</div>
+      <div>Period: {period}</div>
       <div className="ScorerScreen-teams">
         <TeamStats clock={clock} title={'White'} teamStats={globalState.white} />
         <TeamStats clock={clock} title={'Blue'} teamStats={globalState.blue} />

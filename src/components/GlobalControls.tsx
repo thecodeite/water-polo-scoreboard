@@ -1,5 +1,5 @@
 import React from 'react';
-import { pauseMatch, resumeMatch, startMatch, nextQuarter } from '../events';
+import { pauseMatch, resumeMatch, startMatch, nextPeriod } from '../events';
 
 import './GlobalControls.scss';
 
@@ -20,7 +20,7 @@ export function GlobalControls({
         <button onClick={() => addEvent(resumeMatch())}>Resume Match</button>
       )}
 
-      <button onClick={() => addEvent(nextQuarter())}>Next quarter</button>
+      <button onClick={() => addEvent(nextPeriod())}>Next period</button>
     </div>
   );
 }

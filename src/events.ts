@@ -32,10 +32,10 @@ export function resumeMatch(): MatchResumeEvent {
   };
 }
 
-export function nextQuarter(): NextQuarterEvent {
+export function nextPeriod(): NextPeriodEvent {
   return {
     id: nextId(),
-    name: 'next-quarter',
+    name: 'next-period',
     timestamp: stamp(),
   };
 }
