@@ -16,8 +16,8 @@ interface GameEventCap extends GameEventBase {
 interface MatchPauseEvent extends GameEventBase {
   name: 'match-pause';
 }
-interface MatchResumeEvent extends GameEventBase {
-  name: 'match-resume';
+interface MatchStartEvent extends GameEventBase {
+  name: 'match-start';
 }
 interface NextPeriodEvent extends GameEventBase {
   name: 'next-period';
@@ -41,7 +41,7 @@ interface BrutalityEvent extends GameEventCap {
 
 type GameEvent =
   | MatchPauseEvent
-  | MatchResumeEvent
+  | MatchStartEvent
   | NextPeriodEvent
   | GoalScoredEvent
   | PeneltyEvent

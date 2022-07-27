@@ -16,10 +16,10 @@ export function pauseMatch(): MatchPauseEvent {
   };
 }
 
-export function resumeMatch(): MatchResumeEvent {
+export function startMatch(): MatchStartEvent {
   return {
     id: nextId(),
-    name: 'match-resume',
+    name: 'match-start',
     timestamp: stamp(),
   };
 }

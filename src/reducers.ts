@@ -36,7 +36,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
             },
             [...arr, { ...event, matchTime, period }],
           ];
-        case 'match-resume':
+        case 'match-start':
           matchTime = oldState.timeBeforePause;
           return [
             {
@@ -110,7 +110,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           timeBeforePause: event.matchTime,
           unPausedAt: undefined,
         };
-      case 'match-resume':
+      case 'match-start':
         if (oldState.unPausedAt) throw new Error('Match not paused');
         return {
           ...oldState,
