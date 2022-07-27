@@ -57,8 +57,8 @@ function SingleTeamControls({
       <h1>{team}</h1>
       <div>
         {caps.map((cap) => (
-          <div>
-            <label key={`cap-${cap}`}>
+          <div key={`cap-${cap}`}>
+            <label>
               Press for {pressAction} <button onClick={() => tapCap(cap)}>Cap {cap}</button>
             </label>
           </div>
