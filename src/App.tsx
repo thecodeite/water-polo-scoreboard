@@ -35,7 +35,7 @@ function App() {
       </div>
       <ScorerScreen globalState={globalState} />
       <GlobalControls globalState={globalState} addEvent={addEvent} />
-      <TeamControls globalState={globalState} addEvent={addEvent} />
+      <TeamControls addEvent={addEvent} />
       <EventLog events={eventsWithMatchTime} />
       {/* <pre>{JSON.stringify(globalState, null, '  ')}</pre> */}
     </div>

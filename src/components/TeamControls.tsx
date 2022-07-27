@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { capExclusion, capReplacement as capEms, goalScored, capBrutality } from '../events';
 import { Led } from './Led';
 
-export function TeamControls({
-  globalState,
-  addEvent,
-}: {
-  globalState: GlobalState;
-  addEvent: (newEvent: GameEvent) => void;
-}) {
+import './TeamControls.scss';
+
+export function TeamControls({ addEvent }: { addEvent: (newEvent: GameEvent) => void }) {
+  const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
+
   return (
     <div className="TeamControls">
-      <SingleTeamControls team="white" globalState={globalState} addEvent={addEvent} />
-      <SingleTeamControls team="blue" globalState={globalState} addEvent={addEvent} />
+      <div className="TeamControls-split">
+        <SingleTeamControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} team="white" addEvent={addEvent} />
+        <SingleTeamControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} team="blue" addEvent={addEvent} />
+      </div>
+      <hr />
+      <EventControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} />
     </div>
   );
 }
@@ -22,16 +24,16 @@ const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13
 type MultiEvent = '' | 'goal' | 'ems' | 'brutality';
 
 function SingleTeamControls({
-  globalState,
   addEvent,
   team,
+  multiEvent,
+  setMultiEvent,
 }: {
-  globalState: GlobalState;
   addEvent: (newEvent: GameEvent) => void;
   team: Team;
+  multiEvent: string;
+  setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
 }) {
-  const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
-
   const tapCap = (cap: string) => {
     if (multiEvent === '') {
       addEvent(capExclusion(team, cap));
@@ -64,7 +66,19 @@ function SingleTeamControls({
           </div>
         ))}
       </div>
-      <hr />
+    </div>
+  );
+}
+
+function EventControls({
+  multiEvent,
+  setMultiEvent,
+}: {
+  multiEvent: string;
+  setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
+}) {
+  return (
+    <div className="EventControls">
       <div>
         <Led on={multiEvent === 'goal'} />
         <button onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>Goal</button>

@@ -9,10 +9,3 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-.TeamControls {
-  display: flex;
-  & > * {
-    flex-grow: 1;
-  }
-}
