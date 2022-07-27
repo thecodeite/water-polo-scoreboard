@@ -46,10 +46,10 @@ export function goalScored(team: Team, cap: string): GoalScoredEvent {
     cap,
   };
 }
-export function capPenelty(team: Team, cap: string): PeneltyEvent {
+export function capExclusion(team: Team, cap: string): ExclusionEvent {
   return {
     ...baseEvent(),
-    name: 'penelty',
+    name: 'exclusion',
     team,
     cap,
   };

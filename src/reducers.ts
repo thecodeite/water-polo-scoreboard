@@ -101,12 +101,12 @@ export function reduceState(events: GameEventWithMatchTime[]) {
     period: 1,
     white: {
       goals: 0,
-      penelties: [],
+      exclusions: [],
       replaced: [],
     },
     blue: {
       goals: 0,
-      penelties: [],
+      exclusions: [],
       replaced: [],
     },
   };
@@ -144,14 +144,14 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             goals: oldTsGoals.goals + 1,
           },
         };
-      case 'penelty':
+      case 'exclusion':
         const oldTsPens = oldState[event.team];
         return {
           ...oldState,
           [event.team]: {
             ...oldTsPens,
-            penelties: [
-              ...oldTsPens.penelties,
+            exclusions: [
+              ...oldTsPens.exclusions,
               {
                 id: event.id,
                 cap: event.cap,
@@ -167,8 +167,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           ...oldState,
           [event.team]: {
             ...oldTsRep,
-            penelties: [
-              ...oldTsRep.penelties,
+            exclusions: [
+              ...oldTsRep.exclusions,
               {
                 id: event.id,
                 cap: event.cap,
@@ -185,8 +185,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           ...oldState,
           [event.team]: {
             ...oldTsBrute,
-            penelties: [
-              ...oldTsBrute.penelties,
+            exclusions: [
+              ...oldTsBrute.exclusions,
               {
                 id: event.id,
                 cap: event.cap,

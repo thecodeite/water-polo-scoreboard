@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { capPenelty, capReplacement as capEms, goalScored, capBrutality } from '../events';
+import { capExclusion, capReplacement as capEms, goalScored, capBrutality } from '../events';
 import { Led } from './Led';
 
 export function TeamControls({
@@ -34,7 +34,7 @@ function SingleTeamControls({
 
   const tapCap = (cap: string) => {
     if (multiEvent === '') {
-      addEvent(capPenelty(team, cap));
+      addEvent(capExclusion(team, cap));
     } else if (multiEvent === 'goal') {
       addEvent(goalScored(team, cap));
     } else if (multiEvent === 'ems') {

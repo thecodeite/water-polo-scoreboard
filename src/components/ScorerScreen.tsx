@@ -45,7 +45,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
 }
 
 function TeamStats({ clock, title, teamStats }: { clock: number; title: string; teamStats: TeamStats }) {
-  const pens = teamStats.penelties
+  const pens = teamStats.exclusions
     .filter((p) => p.end > clock) //
     .map((p) => ({ ...p, t: p.end - clock }));
 

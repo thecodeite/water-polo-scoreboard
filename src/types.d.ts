@@ -28,8 +28,8 @@ interface GoalScoredEvent extends GameEventCap {
   name: 'goal-scored';
 }
 
-interface PeneltyEvent extends GameEventCap {
-  name: 'penelty';
+interface ExclusionEvent extends GameEventCap {
+  name: 'exclusion';
 }
 
 interface EmsEvent extends GameEventCap {
@@ -57,7 +57,7 @@ type GameEvent =
   | MatchStartEvent
   | NextPeriodEvent
   | GoalScoredEvent
-  | PeneltyEvent
+  | ExclusionEvent
   | EmsEvent
   | BrutalityEvent
   | RestStartEvent
@@ -65,7 +65,7 @@ type GameEvent =
 
 type GameEventWithMatchTime = GameEvent & { matchTime: number; period: number };
 
-interface Penelty {
+interface Exclusion {
   id: stringl;
   cap: number;
   start: number;
@@ -74,7 +74,7 @@ interface Penelty {
 
 interface TeamStats {
   goals: number;
-  penelties: Penelty[];
+  exclusions: Exclusion[];
   replaced: number[];
 }
 
