@@ -165,7 +165,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             ],
           },
         };
-      case 'replacement':
+      case 'ems':
         const oldTsRep = oldState[event.team];
         return {
           ...oldState,

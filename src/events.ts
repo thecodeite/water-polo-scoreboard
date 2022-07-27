@@ -59,10 +59,10 @@ export function capPenelty(team: Team, cap: string): PeneltyEvent {
   };
 }
 
-export function capReplacement(team: Team, cap: string): ReplacementEvent {
+export function capReplacement(team: Team, cap: string): EmsEvent {
   return {
     id: nextId(),
-    name: 'replacement',
+    name: 'ems',
     timestamp: stamp(),
     team,
     cap,

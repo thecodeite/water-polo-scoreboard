@@ -34,8 +34,8 @@ interface PeneltyEvent extends GameEventCap {
   name: 'penelty';
 }
 
-interface ReplacementEvent extends GameEventCap {
-  name: 'replacement';
+interface EmsEvent extends GameEventCap {
+  name: 'ems';
 }
 
 interface BrutalityEvent extends GameEventCap {
@@ -49,7 +49,7 @@ type GameEvent =
   | NextQuarterEvent
   | GoalScoredEvent
   | PeneltyEvent
-  | ReplacementEvent
+  | EmsEvent
   | BrutalityEvent;
 
 type GameEventWithMatchTime = GameEvent & { matchTime: number; quarter: number };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { capPenelty, capReplacement, goalScored, capBrutality } from '../events';
+import { capPenelty, capReplacement as capEms, goalScored, capBrutality } from '../events';
 import { Led } from './Led';
 
 export function TeamControls({
@@ -19,7 +19,7 @@ export function TeamControls({
 
 const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'HC', 'AC', 'TM'];
 //const caps = Array.from({ length: 15 }, (_, i) => i< i + 1);
-type MultiEvent = '' | 'goal' | 'replacement' | 'brutality';
+type MultiEvent = '' | 'goal' | 'ems' | 'brutality';
 
 function SingleTeamControls({
   globalState,
@@ -37,8 +37,8 @@ function SingleTeamControls({
       addEvent(capPenelty(team, cap));
     } else if (multiEvent === 'goal') {
       addEvent(goalScored(team, cap));
-    } else if (multiEvent === 'replacement') {
-      addEvent(capReplacement(team, cap));
+    } else if (multiEvent === 'ems') {
+      addEvent(capEms(team, cap));
     } else if (multiEvent === 'brutality') {
       addEvent(capBrutality(team, cap));
     }
@@ -46,9 +46,9 @@ function SingleTeamControls({
   };
 
   const pressAction = {
-    '': 'penelty for',
+    '': 'Exclusion',
     goal: 'goal scored by',
-    replacement: 'replacement fo',
+    ems: 'Exclusion Misconduct with Substitute (EMS)',
     brutality: 'brutality replacement for',
   }[multiEvent];
 
@@ -59,7 +59,7 @@ function SingleTeamControls({
         {caps.map((cap) => (
           <div>
             <label key={`cap-${cap}`}>
-              Press to record {pressAction} <button onClick={() => tapCap(cap)}>Cap {cap}</button>
+              Press for {pressAction} <button onClick={() => tapCap(cap)}>Cap {cap}</button>
             </label>
           </div>
         ))}
@@ -70,10 +70,8 @@ function SingleTeamControls({
         <button onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>Goal</button>
       </div>
       <div>
-        <Led on={multiEvent === 'replacement'} />
-        <button onClick={() => setMultiEvent((existing) => (existing !== 'replacement' ? 'replacement' : ''))}>
-          Replacement
-        </button>
+        <Led on={multiEvent === 'ems'} />
+        <button onClick={() => setMultiEvent((existing) => (existing !== 'ems' ? 'ems' : ''))}>EMS</button>
       </div>
       <div>
         <Led on={multiEvent === 'brutality'} />
