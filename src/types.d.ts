@@ -68,7 +68,12 @@ type GameEvent =
   | RestStartEvent
   | PeriodEndEvent;
 
-type GameEventWithMatchTime = GameEvent & { matchTime: number; period: number };
+interface RelativeTiming {
+  periodTime: number;
+  period: number;
+}
+
+type GameEventWithMatchTime = GameEvent & RelativeTiming;
 
 interface Exclusion {
   id: stringl;
