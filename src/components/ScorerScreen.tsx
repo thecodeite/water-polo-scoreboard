@@ -17,8 +17,11 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
     return () => clearInterval(h);
   }, [timeBeforePause, unPausedAt]);
 
-  const timeLeftSigned = 8 * 60 * 1000 - clock;
-  const sign = timeLeftSigned < 0 ? '-' : '';
+  let timeLeftSigned = 8 * 60 * 1000 - clock;
+  const inRest = timeLeftSigned < 0;
+  if (timeLeftSigned < -2 * 60 * 1000) {
+    timeLeftSigned = -2 * 60 * 1000;
+  }
   const timeLeft = Math.abs(timeLeftSigned);
   const minutes = Math.floor(timeLeft / 60000).toString();
   const seconds = Math.floor((timeLeft % 60000) / 1000)
@@ -29,9 +32,9 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
   return (
     <div className="ScorerScreen">
       <div>
-        Match Time: {sign}
-        {minutes}:{seconds}.{tenths}
+        Match Time: {minutes}:{seconds}.{tenths}
       </div>
+      {inRest ? <div>Rest</div> : undefined}
       <div>Period: {period}</div>
       <div className="ScorerScreen-teams">
         <TeamStats clock={clock} title={'White'} teamStats={globalState.white} />

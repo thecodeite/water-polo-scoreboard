@@ -4,6 +4,7 @@ interface GameEventBase {
   id: string;
   name: string;
   timestamp: number;
+  isVirtual: false;
   team?: Team;
   cap?: string;
 }
@@ -39,6 +40,18 @@ interface BrutalityEvent extends GameEventCap {
   name: 'brutality';
 }
 
+/* Vistual Events */
+interface GameEventVirtual extends GameEventBase {
+  isVirtual: boolean;
+}
+interface RestStartEvent extends GameEventVirtual {
+  name: 'rest-start';
+}
+
+interface PeriodEndEvent extends GameEventVirtual {
+  name: 'period-end';
+}
+
 type GameEvent =
   | MatchPauseEvent
   | MatchStartEvent
@@ -46,7 +59,9 @@ type GameEvent =
   | GoalScoredEvent
   | PeneltyEvent
   | EmsEvent
-  | BrutalityEvent;
+  | BrutalityEvent
+  | RestStartEvent
+  | PeriodEndEvent;
 
 type GameEventWithMatchTime = GameEvent & { matchTime: number; period: number };
 

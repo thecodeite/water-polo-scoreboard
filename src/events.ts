@@ -3,49 +3,53 @@ export function stamp() {
 }
 
 let idState = 0;
-function nextId() {
+export function nextId() {
   idState = idState + 1;
   return `${idState}`.padStart(10, '0');
 }
 
-export function pauseMatch(): MatchPauseEvent {
+function baseEvent(): GameEventBase {
   return {
     id: nextId(),
-    name: 'match-pause',
+    name: 'base-event',
     timestamp: stamp(),
+    isVirtual: false,
+  };
+}
+
+export function pauseMatch(): MatchPauseEvent {
+  return {
+    ...baseEvent(),
+    name: 'match-pause',
   };
 }
 
 export function startMatch(): MatchStartEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'match-start',
-    timestamp: stamp(),
   };
 }
 
 export function nextPeriod(): NextPeriodEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'next-period',
-    timestamp: stamp(),
   };
 }
 
 export function goalScored(team: Team, cap: string): GoalScoredEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'goal-scored',
-    timestamp: stamp(),
     team,
     cap,
   };
 }
 export function capPenelty(team: Team, cap: string): PeneltyEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'penelty',
-    timestamp: stamp(),
     team,
     cap,
   };
@@ -53,9 +57,8 @@ export function capPenelty(team: Team, cap: string): PeneltyEvent {
 
 export function capReplacement(team: Team, cap: string): EmsEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'ems',
-    timestamp: stamp(),
     team,
     cap,
   };
@@ -63,9 +66,8 @@ export function capReplacement(team: Team, cap: string): EmsEvent {
 
 export function capBrutality(team: Team, cap: string): BrutalityEvent {
   return {
-    id: nextId(),
+    ...baseEvent(),
     name: 'brutality',
-    timestamp: stamp(),
     team,
     cap,
   };
