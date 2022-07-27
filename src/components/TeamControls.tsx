@@ -1,44 +1,60 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { capExclusion, capReplacement as capEms, goalScored, capBrutality } from '../events';
+import { capExclusion, capEms, goalScored, capBrutality, capPenelty } from '../events';
 import { Led } from './Led';
 
 import './TeamControls.scss';
 
-export function TeamControls({ addEvent }: { addEvent: (newEvent: GameEvent) => void }) {
+export function TeamControls({ unPaused, addEvent }: { unPaused: boolean; addEvent: (newEvent: GameEvent) => void }) {
   const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
 
   return (
     <div className="TeamControls">
       <div className="TeamControls-split">
-        <SingleTeamControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} team="white" addEvent={addEvent} />
-        <SingleTeamControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} team="blue" addEvent={addEvent} />
+        <SingleTeamControls
+          multiEvent={multiEvent}
+          setMultiEvent={setMultiEvent}
+          team="white"
+          addEvent={addEvent}
+          unPaused={unPaused}
+        />
+        <SingleTeamControls
+          multiEvent={multiEvent}
+          setMultiEvent={setMultiEvent}
+          team="blue"
+          addEvent={addEvent}
+          unPaused={unPaused}
+        />
       </div>
       <hr />
-      <EventControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} />
+      <EventControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} unPaused={unPaused} />
     </div>
   );
 }
 
 const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'HC', 'AC', 'TM'];
 //const caps = Array.from({ length: 15 }, (_, i) => i< i + 1);
-type MultiEvent = '' | 'goal' | 'ems' | 'brutality';
+type MultiEvent = '' | 'goal' | 'penelty' | 'ems' | 'brutality';
 
 function SingleTeamControls({
   addEvent,
   team,
   multiEvent,
   setMultiEvent,
+  unPaused,
 }: {
   addEvent: (newEvent: GameEvent) => void;
   team: Team;
-  multiEvent: string;
+  multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
+  unPaused: boolean;
 }) {
   const tapCap = (cap: string) => {
     if (multiEvent === '') {
       addEvent(capExclusion(team, cap));
     } else if (multiEvent === 'goal') {
       addEvent(goalScored(team, cap));
+    } else if (multiEvent === 'penelty') {
+      addEvent(capPenelty(team, cap));
     } else if (multiEvent === 'ems') {
       addEvent(capEms(team, cap));
     } else if (multiEvent === 'brutality') {
@@ -50,6 +66,7 @@ function SingleTeamControls({
   const pressAction = {
     '': 'Exclusion',
     goal: 'goal scored by',
+    penelty: 'Penelty by',
     ems: 'Exclusion Misconduct with Substitute (EMS)',
     brutality: 'brutality replacement for',
   }[multiEvent];
@@ -61,7 +78,10 @@ function SingleTeamControls({
         {caps.map((cap) => (
           <div key={`cap-${cap}`}>
             <label>
-              Press for {pressAction} <button onClick={() => tapCap(cap)}>Cap {cap}</button>
+              Press for {pressAction}{' '}
+              <button disabled={unPaused} onClick={() => tapCap(cap)}>
+                Cap {cap}
+              </button>
             </label>
           </div>
         ))}
@@ -73,25 +93,45 @@ function SingleTeamControls({
 function EventControls({
   multiEvent,
   setMultiEvent,
+  unPaused,
 }: {
   multiEvent: string;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
+  unPaused: boolean;
 }) {
   return (
     <div className="EventControls">
-      <div>
-        <Led on={multiEvent === 'goal'} />
-        <button onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>Goal</button>
-      </div>
-      <div>
-        <Led on={multiEvent === 'ems'} />
-        <button onClick={() => setMultiEvent((existing) => (existing !== 'ems' ? 'ems' : ''))}>EMS</button>
-      </div>
-      <div>
-        <Led on={multiEvent === 'brutality'} />
-        <button onClick={() => setMultiEvent((existing) => (existing !== 'brutality' ? 'brutality' : ''))}>
-          Brutality
-        </button>
+      <div className="EventControls-center-box">
+        <label>
+          <Led on={multiEvent === 'goal'} />
+          <button disabled={unPaused} onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>
+            Goal
+          </button>
+        </label>
+        <label>
+          <Led on={multiEvent === 'penelty'} />
+          <button
+            disabled={unPaused}
+            onClick={() => setMultiEvent((existing) => (existing !== 'penelty' ? 'penelty' : ''))}
+          >
+            Penelty
+          </button>
+        </label>
+        <label>
+          <Led on={multiEvent === 'ems'} />
+          <button disabled={unPaused} onClick={() => setMultiEvent((existing) => (existing !== 'ems' ? 'ems' : ''))}>
+            EMS
+          </button>
+        </label>
+        <label>
+          <Led on={multiEvent === 'brutality'} />
+          <button
+            disabled={unPaused}
+            onClick={() => setMultiEvent((existing) => (existing !== 'brutality' ? 'brutality' : ''))}
+          >
+            Brutality
+          </button>
+        </label>
       </div>
     </div>
   );

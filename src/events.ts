@@ -55,7 +55,15 @@ export function capExclusion(team: Team, cap: string): ExclusionEvent {
   };
 }
 
-export function capReplacement(team: Team, cap: string): EmsEvent {
+export function capPenelty(team: Team, cap: string): PeneltyEvent {
+  return {
+    ...baseEvent(),
+    name: 'penelty',
+    team,
+    cap,
+  };
+}
+export function capEms(team: Team, cap: string): EmsEvent {
   return {
     ...baseEvent(),
     name: 'ems',

@@ -32,6 +32,10 @@ interface ExclusionEvent extends GameEventCap {
   name: 'exclusion';
 }
 
+interface PeneltyEvent extends GameEventCap {
+  name: 'penelty';
+}
+
 interface EmsEvent extends GameEventCap {
   name: 'ems';
 }
@@ -58,6 +62,7 @@ type GameEvent =
   | NextPeriodEvent
   | GoalScoredEvent
   | ExclusionEvent
+  | PeneltyEvent
   | EmsEvent
   | BrutalityEvent
   | RestStartEvent

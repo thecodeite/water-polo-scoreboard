@@ -6,3 +6,15 @@
     }
   }
 }
+
+.EventControls {
+  &-center-box {
+    text-align: left;
+    margin: 8px auto;
+    width: fit-content;
+
+    label {
+      display: block;
+    }
+  }
+}
