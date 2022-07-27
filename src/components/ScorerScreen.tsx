@@ -55,7 +55,7 @@ function TeamStats({ clock, title, teamStats }: { clock: number; title: string; 
       <div className="ScorerScreen-score">{teamStats.goals}</div>
       {pens.length > 0 ? (
         <>
-          <div>Penelties</div>
+          <div>Exclusions</div>
           <ul>
             {pens.map((pen) => (
               <li key={pen.id}>
