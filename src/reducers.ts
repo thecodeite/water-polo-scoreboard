@@ -102,12 +102,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
     white: {
       goals: 0,
       exclusions: [],
-      replaced: [],
     },
     blue: {
       goals: 0,
       exclusions: [],
-      replaced: [],
     },
   };
 
@@ -176,7 +174,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
                 end: event.matchTime + 20000,
               },
             ],
-            replaced: [...oldTsRep.replaced, event.cap],
           },
         };
       case 'brutality':
@@ -194,7 +191,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
                 end: event.matchTime + 4 * 60000,
               },
             ],
-            replaced: [...oldTsBrute.replaced, event.cap],
           },
         };
 

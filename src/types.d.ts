@@ -80,7 +80,6 @@ interface Exclusion {
 interface TeamStats {
   goals: number;
   exclusions: Exclusion[];
-  replaced: number[];
 }
 
 interface GlobalState {

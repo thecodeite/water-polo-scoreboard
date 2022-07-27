@@ -65,7 +65,6 @@ function TeamStats({ clock, title, teamStats }: { clock: number; title: string; 
           </ul>
         </>
       ) : undefined}
-      {teamStats.replaced.length > 0 ? <div>Replaced: {teamStats.replaced.join()}</div> : undefined}
     </div>
   );
 }
