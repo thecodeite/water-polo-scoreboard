@@ -30,7 +30,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
       switch (event.name) {
         case 'match-pause': {
           const { period } = oldState;
-          //if (!oldState.unPausedAt) throw new Error('Match already paused');
           if (!oldState.unPausedAt) return [oldState, [...arr]];
 
           const timeBeforePause = oldState.timeBeforePause + (event.timestamp - oldState.unPausedAt);
@@ -107,10 +106,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
 
 export function reduceState(events: GameEventWithMatchTime[]) {
   const initialState: GlobalState = {
-    // timeBeforePause: 0,
-    // matchStarted: false,
     period: 0,
-    // restTimeStarted: undefined,
     white: {
       goals: 0,
       exclusions: [],
@@ -142,8 +138,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
           return {
             ...oldState,
-            // restTimeStarted: event.timestamp - event.restPeriodTime,
-            // unPausedAt: undefined,
 
             matchTimer: {
               at: undefined,
@@ -162,8 +156,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
         return {
           ...oldState,
-          // timeBeforePause: event.periodTime,
-          //unPausedAt: undefined,
 
           matchTimer: {
             at: undefined,
@@ -176,16 +168,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         };
       }
       case 'match-start': {
-        // if (oldState.restTimeStarted !== undefined) {
         if (event.meaning === 'start-next-period') {
-          // Starting next period
-
           return {
             ...oldState,
             period: event.period,
-            // unPausedAt: event.timestamp,
-            // restTimeStarted: undefined,
-            // timeBeforePause: 0,
 
             matchTimer: {
               at: event.timestamp,
@@ -219,7 +205,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
         return {
           ...oldState,
-          // unPausedAt: event.timestamp,
 
           matchTimer: {
             at: event.timestamp,
@@ -302,10 +287,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
   return state;
 }
-
-// interface TimeState {}
-
-// function applyTime(globalState: GlobalState): TimeState {}
 
 export interface Times {
   periodClock: number;

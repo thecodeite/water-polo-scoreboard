@@ -91,11 +91,7 @@ export interface Timer {
   before: number;
 }
 export interface GlobalState {
-  // matchStarted: boolean;
-  // restTimeStarted?: number;
   period: number;
-  // unPausedAt?: number;
-  // timeBeforePause: number;
   white: TeamStats;
   blue: TeamStats;
 
