@@ -13,7 +13,6 @@ function baseEvent(): GameEventBase {
     id: nextId(),
     name: 'base-event',
     timestamp: stamp(),
-    isVirtual: false,
   };
 }
 

@@ -4,7 +4,6 @@ interface GameEventBase {
   id: string;
   name: string;
   timestamp: number;
-  isVirtual: false;
   team?: Team;
   cap?: string;
 }

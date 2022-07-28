@@ -23,13 +23,13 @@ export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
       <div>Match time</div>
       {events.map((event) => (
         <React.Fragment key={event.id}>
-          <div className={event.isVirtual ? 'v' : undefined}>{new Date(event.timestamp).toISOString()}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.name}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.team}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.cap}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{formatTime(event.periodTime)}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{event.period + 1}</div>
-          <div className={event.isVirtual ? 'v' : undefined}>{formatTime(event.matchTime)}</div>
+          <div>{new Date(event.timestamp).toISOString()}</div>
+          <div>{event.name}</div>
+          <div>{event.team}</div>
+          <div>{event.cap}</div>
+          <div>{formatTime(event.periodTime)}</div>
+          <div>{event.period + 1}</div>
+          <div>{formatTime(event.matchTime)}</div>
         </React.Fragment>
       ))}
     </div>

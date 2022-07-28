@@ -1,5 +1,3 @@
-import { nextId } from './events';
-
 export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
   interface ReducerState {
     timeBeforePause: number;
@@ -16,8 +14,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     pausedAt: undefined,
     period: 0,
   };
-
-  type RestStartEventWithMatchTime = RestStartEvent & RelativeTiming;
 
   const res = events.reduce(
     ([oldState, arr]: ReducerType, event: GameEvent): ReducerType => {
@@ -90,23 +86,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     },
     [initialState, []],
   );
-  const [state, eventWithMatchTime] = res;
-
-  if (state.unPausedAt) {
-    const timeLeft = 8 * 60 * 1000 - state.timeBeforePause;
-
-    const restStartEvent: RestStartEvent & RelativeTiming = {
-      periodTime: 8 * 60 * 1000,
-      period: state.period,
-      matchTime: (state.period + 1) * 8 * 60 * 1000,
-      name: 'rest-start',
-      id: nextId(),
-      timestamp: state.unPausedAt + timeLeft,
-      isVirtual: true,
-    };
-
-    eventWithMatchTime.push(restStartEvent);
-  }
+  const [, eventWithMatchTime] = res;
 
   return eventWithMatchTime;
 }
