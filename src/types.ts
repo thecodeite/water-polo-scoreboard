@@ -1,9 +1,10 @@
 export type Team = 'white' | 'blue';
 
+type TimeStamp = number;
 export interface GameEventBase {
   id: string;
   name: string;
-  timestamp: number;
+  timestamp: TimeStamp;
   team?: Team;
   cap?: string;
 }
@@ -67,7 +68,8 @@ export interface RelativeTiming {
   periodTime: number;
   period: number;
   matchTime: number;
-  restPeriodTime?: number;
+  restPeriodTime: number;
+  meaning?: string;
 }
 
 export type GameEventWithMatchTime = GameEvent & RelativeTiming;
@@ -84,12 +86,20 @@ export interface TeamStats {
   exclusions: Exclusion[];
 }
 
+export interface Timer {
+  at?: TimeStamp;
+  before: number;
+}
 export interface GlobalState {
-  matchStarted: boolean;
-  restTimeStarted?: number;
-  unPausedAt?: number;
+  // matchStarted: boolean;
+  // restTimeStarted?: number;
   period: number;
-  timeBeforePause: number;
+  // unPausedAt?: number;
+  // timeBeforePause: number;
   white: TeamStats;
   blue: TeamStats;
+
+  matchTimer: Timer;
+  periodTimer: Timer;
+  restPeriodTimer: Timer;
 }
