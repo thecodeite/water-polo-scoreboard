@@ -1,5 +1,5 @@
 import React from 'react';
-import { pauseMatch, startMatch, nextPeriod } from '../events';
+import { pauseMatch, startMatch } from '../events';
 
 import './GlobalControls.scss';
 
@@ -18,8 +18,6 @@ export function GlobalControls({
       <button disabled={!globalState.unPausedAt} onClick={() => addEvent(pauseMatch())}>
         Pause Match
       </button>
-
-      <button onClick={() => addEvent(nextPeriod())}>Next period</button>
     </div>
   );
 }

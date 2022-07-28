@@ -30,13 +30,6 @@ export function startMatch(): MatchStartEvent {
   };
 }
 
-export function nextPeriod(): NextPeriodEvent {
-  return {
-    ...baseEvent(),
-    name: 'next-period',
-  };
-}
-
 export function goalScored(team: Team, cap: string): GoalScoredEvent {
   return {
     ...baseEvent(),

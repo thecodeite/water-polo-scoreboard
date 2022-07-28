@@ -19,9 +19,6 @@ interface MatchPauseEvent extends GameEventBase {
 interface MatchStartEvent extends GameEventBase {
   name: 'match-start';
 }
-interface NextPeriodEvent extends GameEventBase {
-  name: 'next-period';
-}
 
 interface GoalScoredEvent extends GameEventCap {
   name: 'goal-scored';

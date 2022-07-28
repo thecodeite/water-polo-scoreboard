@@ -58,21 +58,6 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
             },
             [...arr, { ...event, periodTime, period, matchTime, restPeriodTime: oldState.restPeriodTime }],
           ];
-        case 'next-period':
-          //if (!oldState.pausedAt || oldState.unPausedAt) throw new Error('Match not paused');
-          timeBeforePause = 0;
-          periodTime = 0;
-          matchTime = oldState.period * PERIOD_LENGTH_MS;
-          return [
-            {
-              ...oldState,
-              timeBeforePause,
-              unPausedAt: undefined,
-              pausedAt: undefined,
-              period: period + 1,
-            },
-            [...arr, { ...event, periodTime, period, matchTime, restPeriodTime: oldState.restPeriodTime }],
-          ];
         default: {
           if (oldState.unPausedAt) {
             periodTime = oldState.timeBeforePause + (event.timestamp - oldState.unPausedAt);
@@ -113,15 +98,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
   const state = events.reduce((oldState, event) => {
     switch (event.name) {
-      case 'next-period':
-        // if (oldState.matchStarted) throw new Error('Match already started');
-        return {
-          ...oldState,
-          period: oldState.period + 1,
-          timeBeforePause: 0,
-          matchStarted: false,
-          unPausedAt: undefined,
-        };
       case 'match-pause': {
         if (event.restPeriodTime !== undefined) {
           // Period has ended
