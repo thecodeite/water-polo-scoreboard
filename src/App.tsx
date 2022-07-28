@@ -79,7 +79,7 @@ function App() {
         </>
       )}
       <EventLog events={eventsWithMatchTime} />
-      <pre>{JSON.stringify(globalState, null, '  ')}</pre>
+      {/* <pre>{JSON.stringify(globalState, null, '  ')}</pre> */}
     </div>
   );
 }
