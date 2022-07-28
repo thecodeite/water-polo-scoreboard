@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { capExclusion, capEms, goalScored, capBrutality, capPenelty } from '../events';
+import { GameEvent, Team } from '../types';
 import { Led } from './Led';
 
 import './TeamControls.scss';

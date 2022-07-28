@@ -6,6 +6,7 @@ import { TeamControls } from './components/TeamControls';
 import { EventLog } from './components/EventLog';
 import { reduceState, withMatchTime } from './reducers';
 import { pauseMatch, stamp, startMatch } from './events';
+import { GameEvent } from './types';
 
 function App() {
   const [events, setEvents] = useState<GameEvent[]>([]);

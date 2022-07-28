@@ -1,5 +1,6 @@
 import React from 'react';
 import { pauseMatch, startMatch } from '../events';
+import { GameEvent, GlobalState } from '../types';
 
 import './GlobalControls.scss';
 

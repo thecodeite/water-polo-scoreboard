@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { stamp } from '../events';
+import { GlobalState, TeamStats } from '../types';
 import './ScorerScreen.scss';
 
 interface Times {
@@ -77,14 +78,14 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
       ) : undefined}
       <div>Period: {period}</div>
       <div className="ScorerScreen-teams">
-        <TeamStats clock={exclusionClock} title={'White'} teamStats={globalState.white} />
-        <TeamStats clock={exclusionClock} title={'Blue'} teamStats={globalState.blue} />
+        <TeamStatsView clock={exclusionClock} title={'White'} teamStats={globalState.white} />
+        <TeamStatsView clock={exclusionClock} title={'Blue'} teamStats={globalState.blue} />
       </div>
     </div>
   );
 }
 
-function TeamStats({ clock, title, teamStats }: { clock: number; title: string; teamStats: TeamStats }) {
+function TeamStatsView({ clock, title, teamStats }: { clock: number; title: string; teamStats: TeamStats }) {
   const pens = teamStats.exclusions
     .filter((p) => p.end > clock) //
     .map((p) => ({ ...p, t: p.end - clock }));

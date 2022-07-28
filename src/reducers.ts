@@ -1,3 +1,5 @@
+import { GameEvent, GameEventWithMatchTime, GlobalState } from "./types";
+
 const PERIOD_LENGTH_MS = 8 * 60 * 1000;
 
 export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
