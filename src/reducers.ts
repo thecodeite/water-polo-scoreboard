@@ -1,3 +1,5 @@
+const PERIOD_LENGTH_MS = 8 * 60 * 1000;
+
 export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
   interface ReducerState {
     timeBeforePause: number;
@@ -5,6 +7,7 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     unPausedAt?: number;
     pausedAt?: number;
     period: number;
+    restPeriodTime?: number;
   }
   type ReducerType = [ReducerState, GameEventWithMatchTime[]];
 
@@ -13,54 +16,53 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
     unPausedAt: undefined,
     pausedAt: undefined,
     period: 0,
+    restPeriodTime: undefined,
   };
 
   const res = events.reduce(
     ([oldState, arr]: ReducerType, event: GameEvent): ReducerType => {
-      let timeBeforePause: number;
       let periodTime: number;
       let period = oldState.period;
       let matchTime: number;
 
       switch (event.name) {
-        case 'match-pause':
+        case 'match-pause': {
           if (oldState.pausedAt || !oldState.unPausedAt) throw new Error('Match already paused');
 
-          timeBeforePause = oldState.timeBeforePause + (event.timestamp - oldState.unPausedAt);
-          periodTime = timeBeforePause;
-
-          if (periodTime > 8 * 60 * 1000) {
-            periodTime = 8 * 60 * 1000;
-          }
-          matchTime = oldState.period * 8 * 60 * 1000 + periodTime;
+          const timeBeforePause = oldState.timeBeforePause + (event.timestamp - oldState.unPausedAt);
+          const periodTime = timeBeforePause > PERIOD_LENGTH_MS ? PERIOD_LENGTH_MS : timeBeforePause;
+          const restPeriodTime = timeBeforePause > PERIOD_LENGTH_MS ? timeBeforePause - PERIOD_LENGTH_MS : undefined;
+          const matchTime = oldState.period * PERIOD_LENGTH_MS + periodTime;
           return [
             {
               ...oldState,
               timeBeforePause,
               pausedAt: event.timestamp,
               unPausedAt: undefined,
+              restPeriodTime,
             },
-            [...arr, { ...event, periodTime, period, matchTime }],
+            [...arr, { ...event, periodTime, period, matchTime, restPeriodTime }],
           ];
+        }
         case 'match-start':
           periodTime = oldState.timeBeforePause;
-          if (periodTime > 8 * 60 * 1000) {
-            periodTime = 8 * 60 * 1000;
+          if (periodTime > PERIOD_LENGTH_MS) {
+            periodTime = PERIOD_LENGTH_MS;
           }
-          matchTime = oldState.period * 8 * 60 * 1000 + periodTime;
+          matchTime = oldState.period * PERIOD_LENGTH_MS + periodTime;
           return [
             {
               ...oldState,
               pausedAt: undefined,
               unPausedAt: event.timestamp,
             },
-            [...arr, { ...event, periodTime, period, matchTime }],
+            [...arr, { ...event, periodTime, period, matchTime, restPeriodTime: oldState.restPeriodTime }],
           ];
         case 'next-period':
           //if (!oldState.pausedAt || oldState.unPausedAt) throw new Error('Match not paused');
           timeBeforePause = 0;
           periodTime = 0;
-          matchTime = oldState.period * 8 * 60 * 1000;
+          matchTime = oldState.period * PERIOD_LENGTH_MS;
           return [
             {
               ...oldState,
@@ -69,19 +71,21 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
               pausedAt: undefined,
               period: period + 1,
             },
-            [...arr, { ...event, periodTime, period, matchTime }],
+            [...arr, { ...event, periodTime, period, matchTime, restPeriodTime: oldState.restPeriodTime }],
           ];
-        default:
+        default: {
           if (oldState.unPausedAt) {
             periodTime = oldState.timeBeforePause + (event.timestamp - oldState.unPausedAt);
           } else {
             periodTime = oldState.timeBeforePause;
           }
-          if (periodTime > 8 * 60 * 1000) {
-            periodTime = 8 * 60 * 1000;
+          if (periodTime > PERIOD_LENGTH_MS) {
+            periodTime = PERIOD_LENGTH_MS;
           }
-          matchTime = oldState.period * 8 * 60 * 1000 + periodTime;
-          return [oldState, [...arr, { ...event, periodTime, period, matchTime }]];
+          matchTime = oldState.period * PERIOD_LENGTH_MS + periodTime;
+          const restPeriodTime = oldState.restPeriodTime;
+          return [oldState, [...arr, { ...event, periodTime, period, matchTime, restPeriodTime }]];
+        }
       }
     },
     [initialState, []],
@@ -96,6 +100,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
     timeBeforePause: 0,
     matchStarted: false,
     period: 1,
+    restTimeStarted: undefined,
     white: {
       goals: 0,
       exclusions: [],
@@ -117,13 +122,22 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           matchStarted: false,
           unPausedAt: undefined,
         };
-      case 'match-pause':
-        if (!oldState.unPausedAt) throw new Error('Match already paused');
+      case 'match-pause': {
+        if (event.restPeriodTime !== undefined) {
+          // Period has ended
+          return {
+            ...oldState,
+            restTimeStarted: event.timestamp - event.restPeriodTime,
+            unPausedAt: undefined,
+          };
+        }
+
         return {
           ...oldState,
           timeBeforePause: event.periodTime,
           unPausedAt: undefined,
         };
+      }
       case 'match-start':
         if (oldState.unPausedAt) throw new Error('Match not paused');
         return {
@@ -198,3 +212,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
   return state;
 }
+
+// interface TimeState {}
+
+// function applyTime(globalState: GlobalState): TimeState {}

@@ -71,6 +71,7 @@ interface RelativeTiming {
   periodTime: number;
   period: number;
   matchTime: number;
+  restPeriodTime?: number;
 }
 
 type GameEventWithMatchTime = GameEvent & RelativeTiming;
@@ -89,6 +90,7 @@ interface TeamStats {
 
 interface GlobalState {
   matchStarted: boolean;
+  restTimeStarted?: number;
   unPausedAt?: number;
   period: number;
   timeBeforePause: number;

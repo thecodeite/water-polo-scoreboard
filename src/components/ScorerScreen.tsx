@@ -8,30 +8,47 @@ interface Times {
   exclusionClock: number;
 }
 
-export function calcTimes(timeBeforePause: number, unPausedAt: number | undefined): Times {
-  const clockDelta = unPausedAt ? stamp() - unPausedAt : 0;
-  const clock = timeBeforePause + clockDelta;
-  const timeLeftSigned = 8 * 60 * 1000 - clock;
+export function calcTimes(
+  timeBeforePause: number,
+  unPausedAt: number | undefined,
+  restTimeStarted: number | undefined,
+): Times {
+  if (restTimeStarted !== undefined) {
+    const clock = stamp() - restTimeStarted;
+    const restClock = clock < 2 * 60 * 1000 ? clock : 2 * 60 * 1000;
 
-  return {
-    periodClock: timeLeftSigned > 0 ? timeLeftSigned : 0,
-    restClock: timeLeftSigned < 0 ? -timeLeftSigned : 0,
-    exclusionClock: timeLeftSigned > 0 ? clock : 8 * 60 * 1000,
-  };
+    return {
+      periodClock: 0,
+      restClock,
+      exclusionClock: 8 * 60 * 1000,
+    };
+  } else {
+    const clockDelta = unPausedAt ? stamp() - unPausedAt : 0;
+    const clock = timeBeforePause + clockDelta;
+    const timeLeftSigned = 8 * 60 * 1000 - clock;
+
+    return {
+      periodClock: timeLeftSigned > 0 ? timeLeftSigned : 0,
+      restClock: timeLeftSigned < 0 ? -timeLeftSigned : 0,
+      exclusionClock: timeLeftSigned > 0 ? clock : 8 * 60 * 1000,
+    };
+  }
 }
 
 export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
-  const { timeBeforePause, unPausedAt, period } = globalState;
-  const [{ periodClock, restClock, exclusionClock }, setClock] = useState(calcTimes(timeBeforePause, unPausedAt));
+  const { timeBeforePause, unPausedAt, period, restTimeStarted } = globalState;
+  const [{ periodClock, restClock, exclusionClock }, setClock] = useState(
+    calcTimes(timeBeforePause, unPausedAt, restTimeStarted),
+  );
 
   useEffect(() => {
-    setClock(calcTimes(timeBeforePause, unPausedAt));
+    setClock(calcTimes(timeBeforePause, unPausedAt, restTimeStarted));
     const h = setInterval(() => {
-      setClock(calcTimes(timeBeforePause, unPausedAt));
+      setClock(calcTimes(timeBeforePause, unPausedAt, restTimeStarted));
     }, 50);
 
     return () => clearInterval(h);
-  }, [timeBeforePause, unPausedAt]);
+  }, [timeBeforePause, unPausedAt, restTimeStarted]);
 
   const tl = {
     minutes: Math.floor(periodClock / 60000).toString(),
