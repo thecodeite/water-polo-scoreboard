@@ -8,6 +8,7 @@ import {
   MatchStartEvent,
   PeneltyEvent,
   Team,
+  UndoEventsEvent,
 } from './types';
 
 export function stamp() {
@@ -82,5 +83,13 @@ export function capBrutality(team: Team, cap: string): BrutalityEvent {
     name: 'brutality',
     team,
     cap,
+  };
+}
+
+export function undoEvents(ids: string[]): UndoEventsEvent {
+  return {
+    ...baseEvent(),
+    name: 'undo-events',
+    ids,
   };
 }

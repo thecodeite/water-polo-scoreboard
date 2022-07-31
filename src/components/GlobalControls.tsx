@@ -1,5 +1,5 @@
 import React from 'react';
-import { pauseMatch, startMatch } from '../events';
+import { pauseMatch, startMatch, undoEvents } from '../events';
 import { GameEvent, GlobalState } from '../types';
 
 import './GlobalControls.scss';
@@ -18,6 +18,12 @@ export function GlobalControls({
       </button>
       <button disabled={!globalState.matchTimer.at} onClick={() => addEvent(pauseMatch())}>
         Pause Match
+      </button>
+      <button
+        disabled={globalState.eventsToUndo.length === 0}
+        onClick={() => addEvent(undoEvents(globalState.eventsToUndo.map((e) => e.id)))}
+      >
+        Undo
       </button>
     </div>
   );

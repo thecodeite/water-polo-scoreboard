@@ -1,8 +1,10 @@
-import { goalScored, pauseMatch, stamp, startMatch } from './events';
+import { goalScored, pauseMatch, stamp, startMatch, undoEvents } from './events';
 import { reduceState, withMatchTime } from './reducers';
 import { GameEvent, GlobalState } from './types';
 
-function buildTimeline(...entries: [GameEvent | (() => GameEvent), number][]) {
+type Entry = [GameEvent | (() => GameEvent), number];
+
+function buildTimeline(...entries: Entry[]) {
   let now = stamp();
   return [...entries]
     .reverse()
@@ -13,7 +15,7 @@ function buildTimeline(...entries: [GameEvent | (() => GameEvent), number][]) {
     .reverse();
 }
 
-function setup(...entries: [GameEvent | (() => GameEvent), number][]): GlobalState {
+function setup(...entries: Entry[]): GlobalState {
   const events = buildTimeline(...entries);
   return reduceState(withMatchTime(events));
 }
@@ -61,6 +63,20 @@ describe('undo function', () => {
     );
 
     expect(state.eventsToUndo).toEqual([]);
+  });
+
+  it('should not apply goal if event is undone', () => {
+    const goal = goalScored('white', '1');
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [goal, 1000],
+      [undoEvents([goal.id]), 1000],
+    );
+
+    expect(state.white.goals).toEqual(0);
+    expect(state.eventsToUndo).toEqual([]);
+    expect(state.deletedEvents).toEqual([goal.id]);
   });
 });
 

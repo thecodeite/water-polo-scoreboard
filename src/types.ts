@@ -20,6 +20,10 @@ export interface MatchPauseEvent extends GameEventBase {
 export interface MatchStartEvent extends GameEventBase {
   name: 'match-start';
 }
+export interface UndoEventsEvent extends GameEventBase {
+  name: 'undo-events';
+  ids: string[];
+}
 
 export interface GoalScoredEvent extends GameEventCap {
   name: 'goal-scored';
@@ -62,7 +66,8 @@ export type GameEvent =
   | EmsEvent
   | BrutalityEvent
   | RestStartEvent
-  | PeriodEndEvent;
+  | PeriodEndEvent
+  | UndoEventsEvent;
 
 export interface RelativeTiming {
   periodTime: number;
@@ -100,4 +105,5 @@ export interface GlobalState {
   restPeriodTimer: Timer;
 
   eventsToUndo: GameEventWithMatchTime[];
+  deletedEvents: string[];
 }

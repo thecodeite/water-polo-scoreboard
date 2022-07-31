@@ -78,7 +78,7 @@ function App() {
           <TeamControls unPaused={!!globalState.matchTimer?.at} addEvent={addEvent} />
         </>
       )}
-      <EventLog events={eventsWithMatchTime} />
+      <EventLog events={eventsWithMatchTime} deletedEvents={globalState?.deletedEvents} />
       {/* <pre>{JSON.stringify(globalState, null, '  ')}</pre> */}
     </div>
   );

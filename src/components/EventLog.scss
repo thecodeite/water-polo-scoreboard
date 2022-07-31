@@ -1,9 +1,30 @@
 .EventLog {
   margin-top: 16px;
   border-top: 3px double black;
-  display: grid;
+  width: 100%;
 
+  display: table;
   .v {
     color: darkgrey;
+  }
+
+  .header {
+    display: table-header-group;
+
+    & > * {
+      display: table-cell;
+    }
+  }
+
+  .row {
+    display: table-row;
+
+    & > * {
+      display: table-cell;
+    }
+
+    &.deleted {
+      text-decoration: line-through;
+    }
   }
 }

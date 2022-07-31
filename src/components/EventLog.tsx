@@ -12,18 +12,26 @@ function formatTime(ms: number) {
   return `${mins}:${seconds}`;
 }
 
-export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
+export function EventLog({
+  events,
+  deletedEvents = [],
+}: {
+  events: GameEventWithMatchTime[];
+  deletedEvents?: string[];
+}) {
   return (
-    <div className="EventLog" style={{ gridTemplateColumns: 'repeat(7, auto)' }}>
-      <div>Timestamp</div>
-      <div>Event</div>
-      <div>Team</div>
-      <div>Cap</div>
-      <div>Period time</div>
-      <div>Period</div>
-      <div>Match time</div>
+    <div className="EventLog">
+      <div className="header">
+        <div>Timestamp</div>
+        <div>Event</div>
+        <div>Team</div>
+        <div>Cap</div>
+        <div>Period time</div>
+        <div>Period</div>
+        <div>Match time</div>
+      </div>
       {events.map((event) => (
-        <React.Fragment key={event.id}>
+        <div className={`row ${deletedEvents.includes(event.id) ? 'deleted' : ''}`} key={event.id}>
           <div>{new Date(event.timestamp).toISOString()}</div>
           <div>
             {event.name}
@@ -34,7 +42,7 @@ export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
           <div>{formatTime(event.periodTime)}</div>
           <div>{event.period + 1}</div>
           <div>{formatTime(event.matchTime)}</div>
-        </React.Fragment>
+        </div>
       ))}
     </div>
   );

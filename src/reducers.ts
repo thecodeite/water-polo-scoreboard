@@ -130,9 +130,15 @@ export function reduceState(events: GameEventWithMatchTime[]) {
     },
 
     eventsToUndo: [],
+    deletedEvents: [],
   };
 
-  const state = events.reduce<GlobalState>((oldStateArg, event): GlobalState => {
+  const eventsToDelete = events.reduce<string[]>((ids, e) => (e.name === 'undo-events' ? [...ids, ...e.ids] : ids), []);
+
+  const filteredEvents = events.filter((e) => !eventsToDelete.includes(e.id));
+  initialState.deletedEvents = eventsToDelete;
+
+  const state = filteredEvents.reduce<GlobalState>((oldStateArg, event): GlobalState => {
     // All events
     const oldState = {
       ...oldStateArg,
@@ -296,6 +302,12 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               },
             ],
           },
+        };
+      }
+      case 'undo-events': {
+        return {
+          ...oldState,
+          eventsToUndo: [],
         };
       }
       default:
