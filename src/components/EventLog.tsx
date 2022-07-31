@@ -32,7 +32,7 @@ export function EventLog({ events }: { events: GameEventWithMatchTime[] }) {
           <div>{event.team}</div>
           <div>{event.cap}</div>
           <div>{formatTime(event.periodTime)}</div>
-          <div>{event.period}</div>
+          <div>{event.period + 1}</div>
           <div>{formatTime(event.matchTime)}</div>
         </React.Fragment>
       ))}

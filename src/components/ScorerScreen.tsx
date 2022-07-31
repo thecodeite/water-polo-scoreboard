@@ -43,7 +43,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
           Rest Time: {rt.minutes}:{rt.seconds}.{rt.tenths}{' '}
         </div>
       ) : undefined}
-      <div>Period: {period}</div>
+      <div>Period: {period + 1}</div>
       <div className="ScorerScreen-teams">
         <TeamStatsView clock={matchClock} title={'White'} teamStats={globalState.white} />
         <TeamStatsView clock={matchClock} title={'Blue'} teamStats={globalState.blue} />
