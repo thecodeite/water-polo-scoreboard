@@ -128,9 +128,17 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       at: undefined,
       before: 0,
     },
+
+    eventsToUndo: [],
   };
 
-  const state = events.reduce<GlobalState>((oldState, event): GlobalState => {
+  const state = events.reduce<GlobalState>((oldStateArg, event): GlobalState => {
+    // All events
+    const oldState = {
+      ...oldStateArg,
+      eventsToUndo: [...oldStateArg.eventsToUndo, event],
+    };
+
     switch (event.name) {
       case 'match-pause': {
         if (event.meaning === 'reset-in-rest') {
@@ -151,6 +159,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               at: event.timestamp - event.restPeriodTime,
               before: event.restPeriodTime,
             },
+
+            eventsToUndo: [],
           };
         }
 
@@ -165,6 +175,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             at: undefined,
             before: event.periodTime,
           },
+
+          eventsToUndo: [],
         };
       }
       case 'match-start': {
@@ -185,6 +197,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               at: undefined,
               before: 0,
             },
+
+            eventsToUndo: [],
           };
         } else if (event.meaning === 'start-of-match') {
           // Start of match
@@ -198,6 +212,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               at: event.timestamp,
               before: event.periodTime,
             },
+
+            eventsToUndo: [],
           };
         }
 
@@ -214,6 +230,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             at: event.timestamp,
             before: event.periodTime,
           },
+
+          eventsToUndo: [],
         };
       }
       case 'goal-scored': {

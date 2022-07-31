@@ -98,4 +98,6 @@ export interface GlobalState {
   matchTimer: Timer;
   periodTimer: Timer;
   restPeriodTimer: Timer;
+
+  eventsToUndo: GameEventWithMatchTime[];
 }
