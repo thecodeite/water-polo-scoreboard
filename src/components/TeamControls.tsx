@@ -1,11 +1,20 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { capExclusion, capEms, goalScored, capBrutality, capPenelty } from '../events';
-import { CapEnum, GameEvent, Team } from '../types';
+import { calcTimes } from '../reducers';
+import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
 
 import './TeamControls.scss';
 
-export function TeamControls({ unPaused, addEvent }: { unPaused: boolean; addEvent: (newEvent: GameEvent) => void }) {
+export function TeamControls({
+  unPaused,
+  addEvent,
+  globalState,
+}: {
+  unPaused: boolean;
+  addEvent: (newEvent: GameEvent) => void;
+  globalState: GlobalState;
+}) {
   const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
 
   return (
@@ -17,6 +26,7 @@ export function TeamControls({ unPaused, addEvent }: { unPaused: boolean; addEve
           team="white"
           addEvent={addEvent}
           unPaused={unPaused}
+          globalState={globalState}
         />
         <SingleTeamControls
           multiEvent={multiEvent}
@@ -24,6 +34,7 @@ export function TeamControls({ unPaused, addEvent }: { unPaused: boolean; addEve
           team="blue"
           addEvent={addEvent}
           unPaused={unPaused}
+          globalState={globalState}
         />
       </div>
       <hr />
@@ -42,12 +53,14 @@ function SingleTeamControls({
   multiEvent,
   setMultiEvent,
   unPaused,
+  globalState,
 }: {
   addEvent: (newEvent: GameEvent) => void;
   team: Team;
   multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
   unPaused: boolean;
+  globalState: GlobalState;
 }) {
   const tapCap = (cap: CapEnum) => {
     if (multiEvent === '') {
@@ -62,6 +75,15 @@ function SingleTeamControls({
       addEvent(capBrutality(team, cap));
     }
     setMultiEvent('');
+  };
+
+  const { matchTimer, periodTimer, restPeriodTimer } = globalState;
+  const clock = calcTimes(matchTimer, periodTimer, restPeriodTimer);
+
+  const playerDisabled = (cap: CapEnum) => {
+    if (unPaused) return true;
+    if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
+    return false;
   };
 
   const pressAction = {
@@ -80,7 +102,7 @@ function SingleTeamControls({
           <div key={`cap-${cap}`}>
             <label>
               Press for {pressAction}{' '}
-              <button disabled={unPaused} onClick={() => tapCap(cap)}>
+              <button disabled={playerDisabled(cap)} onClick={() => tapCap(cap)}>
                 Cap {cap}
               </button>
             </label>

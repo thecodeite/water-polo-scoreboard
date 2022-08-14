@@ -1,5 +1,5 @@
 import { stamp } from './events';
-import { GameEvent, GameEventWithMatchTime, GlobalState, Timer } from './types';
+import { Exclusion, GameEvent, GameEventWithMatchTime, GlobalState, Timer } from './types';
 
 const PERIOD_LENGTH_MS = 8 * 60 * 1000;
 const REST_PERIOD_LENGTH_MS = 2 * 60 * 1000;
@@ -252,55 +252,50 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'exclusion': {
         const oldTeamState = oldState[event.team];
+        const newExlcusion: Exclusion = {
+          id: event.id,
+          cap: event.cap,
+          start: event.periodTime,
+          end: event.periodTime + 20000,
+        };
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [
-              ...oldTeamState.exclusions,
-              {
-                id: event.id,
-                cap: event.cap,
-                start: event.periodTime,
-                end: event.periodTime + 20000,
-              },
-            ],
+            exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
         };
       }
       case 'ems': {
         const oldTeamState = oldState[event.team];
+        const newExlcusion: Exclusion = {
+          id: event.id,
+          cap: event.cap,
+          start: event.periodTime,
+          end: event.periodTime + 20000,
+        };
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [
-              ...oldTeamState.exclusions,
-              {
-                id: event.id,
-                cap: event.cap,
-                start: event.periodTime,
-                end: event.periodTime + 20000,
-              },
-            ],
+            exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
         };
       }
       case 'brutality': {
         const oldTeamState = oldState[event.team];
+        const newExlcusion: Exclusion = {
+          id: event.id,
+          cap: event.cap,
+          start: event.periodTime,
+          end: event.periodTime + 4 * 60000,
+        };
+
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [
-              ...oldTeamState.exclusions,
-              {
-                id: event.id,
-                cap: event.cap,
-                start: event.periodTime,
-                end: event.periodTime + 4 * 60000,
-              },
-            ],
+            exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
         };
       }

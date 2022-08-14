@@ -75,7 +75,7 @@ function App() {
         <>
           <ScorerScreen globalState={globalState} />
           <GlobalControls globalState={globalState} addEvent={addEvent} />
-          <TeamControls unPaused={!!globalState.matchTimer?.at} addEvent={addEvent} />
+          <TeamControls globalState={globalState} unPaused={!!globalState.matchTimer?.at} addEvent={addEvent} />
         </>
       )}
       <EventLog events={eventsWithMatchTime} deletedEvents={globalState?.deletedEvents} />
