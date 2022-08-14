@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { ScorerScreen } from './components/ScorerScreen';
 import { GlobalControls } from './components/GlobalControls';
@@ -21,6 +21,20 @@ function buildTimeline(...entries: [() => GameEvent, number][]) {
 
 function App() {
   const [events, setEvents] = useState<GameEvent[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`http://localhost:4000/stream/game-1`);
+
+      if (res.ok) {
+        const newEvents = await res.json();
+        setEvents(newEvents);
+      } else {
+        console.error(await res.text());
+      }
+    })();
+  }, []);
+
   const eventsWithMatchTime = withMatchTime(events);
   const globalState = (() => {
     try {
@@ -30,10 +44,39 @@ function App() {
       return undefined;
     }
   })();
-  const addEvent = (newEvent: GameEvent) => setEvents((oldEvents) => [...oldEvents, newEvent]);
+  //const addEventLocal = (newEvent: GameEvent) => setEvents((oldEvents) => [...oldEvents, newEvent]);
 
-  const reset = () => {
-    setEvents([]);
+  const addEvent = async (newEvent: GameEvent) => {
+    const res = await fetch(`http://localhost:4000/stream/game-1`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(newEvent),
+    });
+
+    if (res.ok) {
+      const newEvents = await res.json();
+      setEvents(newEvents);
+    } else {
+      console.error(await res.text());
+    }
+  };
+
+  const reset = async () => {
+    // setEvents([]);
+    const res = await fetch(`http://localhost:4000/stream/game-1`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+
+    if (res.ok) {
+      setEvents([]);
+    } else {
+      console.error(await res.text());
+    }
   };
 
   const plusTime = (time: number) => {
