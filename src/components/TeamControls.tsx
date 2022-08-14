@@ -118,44 +118,52 @@ function EventControls({
   setMultiEvent,
   unPaused,
 }: {
-  multiEvent: string;
+  multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
   unPaused: boolean;
 }) {
   return (
     <div className="EventControls">
       <div className="EventControls-center-box">
-        <label>
-          <Led on={multiEvent === 'goal'} />
-          <button disabled={unPaused} onClick={() => setMultiEvent((existing) => (existing !== 'goal' ? 'goal' : ''))}>
-            Goal
-          </button>
-        </label>
-        <label>
-          <Led on={multiEvent === 'penelty'} />
-          <button
-            disabled={unPaused}
-            onClick={() => setMultiEvent((existing) => (existing !== 'penelty' ? 'penelty' : ''))}
-          >
-            Penelty
-          </button>
-        </label>
-        <label>
-          <Led on={multiEvent === 'ems'} />
-          <button disabled={unPaused} onClick={() => setMultiEvent((existing) => (existing !== 'ems' ? 'ems' : ''))}>
-            EMS
-          </button>
-        </label>
-        <label>
-          <Led on={multiEvent === 'brutality'} />
-          <button
-            disabled={unPaused}
-            onClick={() => setMultiEvent((existing) => (existing !== 'brutality' ? 'brutality' : ''))}
-          >
-            Brutality
-          </button>
-        </label>
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="goal">
+          Goal
+        </MultiEventButton>
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="penelty">
+          Penelty
+        </MultiEventButton>
+        
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="ems">
+          EMS
+        </MultiEventButton>
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="brutality">
+          Brutality
+        </MultiEventButton>
       </div>
     </div>
+  );
+}
+function MultiEventButton({
+  multiEvent,
+  setMultiEvent,
+  unPaused,
+  eventName,
+  children,
+}: {
+  multiEvent: MultiEvent;
+  setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
+  unPaused: boolean;
+  eventName: MultiEvent;
+  children: string;
+}) {
+  return (
+    <label>
+      <Led on={multiEvent === eventName} />
+      <button
+        disabled={unPaused}
+        onClick={() => setMultiEvent((existing: string) => (existing !== eventName ? eventName : ''))}
+      >
+        {children}
+      </button>
+    </label>
   );
 }
