@@ -271,8 +271,6 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'penelty': {
         const oldTeamState = oldState[event.team];
-        //const newCount = oldTeamState.offenceCount[event.cap].count + 1;
-        //const newOffenceCount: OffenceCount = { count: newCount, flag: newCount >= 3 ? 'RED' : undefined };
 
         return {
           ...oldState,
@@ -293,14 +291,13 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           start: event.periodTime,
           end: event.periodTime + 20000,
         };
-        const newOffenceCount: OffenceCount = { count: oldTeamState.offenceCount[event.cap].count + 1 };
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
             offenceCount: {
               ...oldTeamState.offenceCount,
-              [event.cap]: newOffenceCount,
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
             },
             exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
@@ -318,6 +315,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
+            offenceCount: {
+              ...oldTeamState.offenceCount,
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+            },
             exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
         };
@@ -335,6 +336,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           [event.team]: {
             ...oldTeamState,
             exclusions: [...oldTeamState.exclusions, newExlcusion],
+            offenceCount: {
+              ...oldTeamState.offenceCount,
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+            },
           },
         };
       }
@@ -352,6 +357,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           [event.team]: {
             ...oldTeamState,
             exclusions: [...oldTeamState.exclusions, newExlcusion],
+            offenceCount: {
+              ...oldTeamState.offenceCount,
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+            },
           },
         };
       }

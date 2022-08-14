@@ -11,7 +11,7 @@ import {
   capPenelty,
 } from './events';
 import { reduceState, withMatchTime } from './reducers';
-import { CapEnum, GameEvent, GlobalState } from './types';
+import { CapEnum, GameEvent, GlobalState, Team } from './types';
 
 type Entry = [GameEvent | (() => GameEvent), number];
 
@@ -307,5 +307,24 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.count).toEqual(1);
     expect(oc.flag).toBe('RED');
     expect(oc.noMoreEvents).toBe(true);
+  });
+});
+describe('offences', () => {
+  const eventsThatCountAsOffence: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
+    { n: 'penelty', f: capPenelty },
+    { n: 'exclusion', f: capExclusion },
+    { n: 'em', f: capEm },
+    { n: 'ems', f: capEms },
+    { n: 'brutality', f: capBrutality },
+  ];
+
+  it.each(eventsThatCountAsOffence)('should increase the offence count for a $n', ({ f }) => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [f('white', CapEnum.One), 1000],
+    );
+
+    expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 1 });
   });
 });
