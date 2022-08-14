@@ -5,10 +5,12 @@
   width: fit-content;
 
   &-teams {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
     h2 {
-      margin: 0 16px;
+      padding: 0 16px;
+      margin: 0 auto;
       width: 50%;
       align-items: center;
     }
