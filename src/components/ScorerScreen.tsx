@@ -35,14 +35,15 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
   };
   return (
     <div className="ScorerScreen">
-      <div>
-        Match Time: {tl.minutes}:{tl.seconds}.{tl.tenths}
-      </div>
-      {restClock > 0 ? (
+      {restClock <= 0 ? (
+        <div>
+          Match Time: {tl.minutes}:{tl.seconds}.{tl.tenths}
+        </div>
+      ) : (
         <div>
           Rest Time: {rt.minutes}:{rt.seconds}.{rt.tenths}{' '}
         </div>
-      ) : undefined}
+      )}
       <div>Period: {period + 1}</div>
       <div className="ScorerScreen-teams">
         <TeamStatsView clock={matchClock} title={'White'} teamStats={globalState.white} />
