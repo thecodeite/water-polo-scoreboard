@@ -1,6 +1,7 @@
 import { ulid } from 'ulid';
 import {
   BrutalityEvent,
+  CapEnum,
   EmsEvent,
   ExclusionEvent,
   GameEventBase,
@@ -42,7 +43,7 @@ export function startMatch(): MatchStartEvent {
   };
 }
 
-export function goalScored(team: Team, cap: string): GoalScoredEvent {
+export function goalScored(team: Team, cap: CapEnum): GoalScoredEvent {
   return {
     ...baseEvent(),
     name: 'goal-scored',
@@ -50,7 +51,7 @@ export function goalScored(team: Team, cap: string): GoalScoredEvent {
     cap,
   };
 }
-export function capExclusion(team: Team, cap: string): ExclusionEvent {
+export function capExclusion(team: Team, cap: CapEnum): ExclusionEvent {
   return {
     ...baseEvent(),
     name: 'exclusion',
@@ -59,7 +60,7 @@ export function capExclusion(team: Team, cap: string): ExclusionEvent {
   };
 }
 
-export function capPenelty(team: Team, cap: string): PeneltyEvent {
+export function capPenelty(team: Team, cap: CapEnum): PeneltyEvent {
   return {
     ...baseEvent(),
     name: 'penelty',
@@ -67,7 +68,7 @@ export function capPenelty(team: Team, cap: string): PeneltyEvent {
     cap,
   };
 }
-export function capEms(team: Team, cap: string): EmsEvent {
+export function capEms(team: Team, cap: CapEnum): EmsEvent {
   return {
     ...baseEvent(),
     name: 'ems',
@@ -76,7 +77,7 @@ export function capEms(team: Team, cap: string): EmsEvent {
   };
 }
 
-export function capBrutality(team: Team, cap: string): BrutalityEvent {
+export function capBrutality(team: Team, cap: CapEnum): BrutalityEvent {
   return {
     ...baseEvent(),
     name: 'brutality',

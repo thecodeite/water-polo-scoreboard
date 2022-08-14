@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { capExclusion, capEms, goalScored, capBrutality, capPenelty } from '../events';
-import { GameEvent, Team } from '../types';
+import { CapEnum, GameEvent, Team } from '../types';
 import { Led } from './Led';
 
 import './TeamControls.scss';
@@ -32,8 +32,8 @@ export function TeamControls({ unPaused, addEvent }: { unPaused: boolean; addEve
   );
 }
 
-const caps = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'HC', 'AC', 'TM'];
-//const caps = Array.from({ length: 15 }, (_, i) => i< i + 1);
+const caps = Object.values(CapEnum);
+
 type MultiEvent = '' | 'goal' | 'penelty' | 'ems' | 'brutality';
 
 function SingleTeamControls({
@@ -49,7 +49,7 @@ function SingleTeamControls({
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
   unPaused: boolean;
 }) {
-  const tapCap = (cap: string) => {
+  const tapCap = (cap: CapEnum) => {
     if (multiEvent === '') {
       addEvent(capExclusion(team, cap));
     } else if (multiEvent === 'goal') {

@@ -1,6 +1,6 @@
 import { goalScored, pauseMatch, stamp, startMatch, undoEvents } from './events';
 import { reduceState, withMatchTime } from './reducers';
-import { GameEvent, GlobalState } from './types';
+import { CapEnum, GameEvent, GlobalState } from './types';
 
 type Entry = [GameEvent | (() => GameEvent), number];
 
@@ -46,7 +46,7 @@ describe('undo function', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [goalScored('white', '1'), 1000],
+      [goalScored('white', CapEnum.One), 1000],
     );
 
     expect(state.eventsToUndo.length).toEqual(1);
@@ -58,7 +58,7 @@ describe('undo function', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [goalScored('white', '1'), 1000],
+      [goalScored('white', CapEnum.One), 1000],
       [startMatch, 1000], //
     );
 
@@ -66,7 +66,7 @@ describe('undo function', () => {
   });
 
   it('should not apply goal if event is undone', () => {
-    const goal = goalScored('white', '1');
+    const goal = goalScored('white', CapEnum.One);
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],

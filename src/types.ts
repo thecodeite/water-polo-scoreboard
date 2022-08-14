@@ -1,17 +1,35 @@
 export type Team = 'white' | 'blue';
 
+export enum CapEnum {
+  One = '1',
+  Two = '2',
+  Three = '3',
+  Four = '4',
+  Five = '5',
+  Six = '6',
+  Seven = '7',
+  Eight = '8',
+  Nine = '9',
+  Ten = '10',
+  Eleven = '11',
+  Twelve = '12',
+  HeadCoach = 'HC',
+  AssistantCoach = 'AC',
+  TeamManager = 'TM',
+}
+
 type TimeStamp = number;
 export interface GameEventBase {
   id: string;
   name: string;
   timestamp: TimeStamp;
   team?: Team;
-  cap?: string;
+  cap?: CapEnum;
 }
 
 export interface GameEventCap extends GameEventBase {
   team: Team;
-  cap: string;
+  cap: CapEnum;
 }
 
 export interface MatchPauseEvent extends GameEventBase {
@@ -81,7 +99,7 @@ export type GameEventWithMatchTime = GameEvent & RelativeTiming;
 
 export interface Exclusion {
   id: string;
-  cap: number;
+  cap: CapEnum;
   start: number;
   end: number;
 }
