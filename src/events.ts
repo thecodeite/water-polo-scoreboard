@@ -1,3 +1,4 @@
+import { ulid } from 'ulid';
 import {
   BrutalityEvent,
   EmsEvent,
@@ -15,10 +16,8 @@ export function stamp() {
   return new Date().getTime();
 }
 
-let idState = 0;
 export function nextId() {
-  idState = idState + 1;
-  return `${idState}`.padStart(10, '0');
+  return ulid();
 }
 
 function baseEvent(): GameEventBase {

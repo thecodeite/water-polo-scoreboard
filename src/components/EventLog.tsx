@@ -31,7 +31,7 @@ export function EventLog({
         <div>Match time</div>
       </div>
       {events.map((event) => (
-        <div className={`row ${deletedEvents.includes(event.id) ? 'deleted' : ''}`} key={event.id}>
+        <div className={`row ${deletedEvents.includes(event.id) ? 'deleted' : ''}`} key={event.id} data-key={event.id}>
           <div>{new Date(event.timestamp).toISOString()}</div>
           <div>
             {event.name}
