@@ -1,5 +1,14 @@
 import { stamp } from './events';
-import { Exclusion, GameEvent, GameEventWithMatchTime, GlobalState, Timer } from './types';
+import {
+  CapEnum,
+  Exclusion,
+  GameEvent,
+  GameEventWithMatchTime,
+  GlobalState,
+  OffenceCount,
+  TeamStats,
+  Timer,
+} from './types';
 
 const PERIOD_LENGTH_MS = 8 * 60 * 1000;
 const REST_PERIOD_LENGTH_MS = 2 * 60 * 1000;
@@ -104,16 +113,26 @@ export function withMatchTime(events: GameEvent[]): GameEventWithMatchTime[] {
   return eventWithMatchTime;
 }
 
+function makeZeroOffenceCount(): Record<CapEnum, OffenceCount> {
+  const caps = Object.values(CapEnum);
+  const zeroOffences: OffenceCount = { count: 0 };
+  const entries: [CapEnum, OffenceCount][] = caps.map((cap: CapEnum) => [cap, zeroOffences]);
+  const obj = Object.fromEntries<OffenceCount>(entries) as Record<CapEnum, OffenceCount>;
+  return obj;
+}
+
 export function reduceState(events: GameEventWithMatchTime[]) {
   const initialState: GlobalState = {
     period: 0,
     white: {
       goals: 0,
       exclusions: [],
+      offenceCount: makeZeroOffenceCount(),
     },
     blue: {
       goals: 0,
       exclusions: [],
+      offenceCount: makeZeroOffenceCount(),
     },
 
     matchTimer: {
@@ -250,7 +269,44 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           },
         };
       }
+      case 'penelty': {
+        const oldTeamState = oldState[event.team];
+        //const newCount = oldTeamState.offenceCount[event.cap].count + 1;
+        //const newOffenceCount: OffenceCount = { count: newCount, flag: newCount >= 3 ? 'RED' : undefined };
+
+        return {
+          ...oldState,
+          [event.team]: {
+            ...oldTeamState,
+            offenceCount: {
+              ...oldTeamState.offenceCount,
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+            },
+          },
+        };
+      }
       case 'exclusion': {
+        const oldTeamState = oldState[event.team];
+        const newExlcusion: Exclusion = {
+          id: event.id,
+          cap: event.cap,
+          start: event.periodTime,
+          end: event.periodTime + 20000,
+        };
+        const newOffenceCount: OffenceCount = { count: oldTeamState.offenceCount[event.cap].count + 1 };
+        return {
+          ...oldState,
+          [event.team]: {
+            ...oldTeamState,
+            offenceCount: {
+              ...oldTeamState.offenceCount,
+              [event.cap]: newOffenceCount,
+            },
+            exclusions: [...oldTeamState.exclusions, newExlcusion],
+          },
+        };
+      }
+      case 'em': {
         const oldTeamState = oldState[event.team];
         const newExlcusion: Exclusion = {
           id: event.id,
@@ -311,6 +367,20 @@ export function reduceState(events: GameEventWithMatchTime[]) {
   }, initialState);
 
   return state;
+}
+
+function calcOffenceCount(oldTeamState: TeamStats, cap: CapEnum): OffenceCount {
+  const newCount = oldTeamState.offenceCount[cap].count + 1;
+
+  if (cap === CapEnum.HeadCoach) {
+    return { count: newCount, flag: newCount === 1 ? 'YELLOW' : 'RED', noMoreEvents: newCount > 1 ? true : undefined };
+  }
+
+  if (cap === CapEnum.AssistantCoach || cap === CapEnum.TeamManager) {
+    return { count: newCount, flag: 'RED', noMoreEvents: true };
+  }
+
+  return { count: newCount, flag: newCount >= 3 ? 'RED' : undefined };
 }
 
 export interface Times {

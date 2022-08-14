@@ -2,6 +2,7 @@ import { ulid } from 'ulid';
 import {
   BrutalityEvent,
   CapEnum,
+  EmEvent,
   EmsEvent,
   ExclusionEvent,
   GameEventBase,
@@ -68,6 +69,16 @@ export function capPenelty(team: Team, cap: CapEnum): PeneltyEvent {
     cap,
   };
 }
+
+export function capEm(team: Team, cap: CapEnum): EmEvent {
+  return {
+    ...baseEvent(),
+    name: 'em',
+    team,
+    cap,
+  };
+}
+
 export function capEms(team: Team, cap: CapEnum): EmsEvent {
   return {
     ...baseEvent(),

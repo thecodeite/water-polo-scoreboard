@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { capExclusion, capEms, goalScored, capBrutality, capPenelty } from '../events';
+import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenelty } from '../events';
 import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
@@ -45,7 +45,7 @@ export function TeamControls({
 
 const caps = Object.values(CapEnum);
 
-type MultiEvent = '' | 'goal' | 'penelty' | 'ems' | 'brutality';
+type MultiEvent = '' | 'goal' | 'penelty' | 'em' | 'ems' | 'brutality';
 
 function SingleTeamControls({
   addEvent,
@@ -69,6 +69,8 @@ function SingleTeamControls({
       addEvent(goalScored(team, cap));
     } else if (multiEvent === 'penelty') {
       addEvent(capPenelty(team, cap));
+    } else if (multiEvent === 'em') {
+      addEvent(capEm(team, cap));
     } else if (multiEvent === 'ems') {
       addEvent(capEms(team, cap));
     } else if (multiEvent === 'brutality') {
@@ -83,6 +85,7 @@ function SingleTeamControls({
   const playerDisabled = (cap: CapEnum) => {
     if (unPaused) return true;
     if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
+    if (globalState[team].offenceCount[cap].noMoreEvents) return true;
     return false;
   };
 
@@ -90,6 +93,7 @@ function SingleTeamControls({
     '': 'Exclusion',
     goal: 'goal scored by',
     penelty: 'Penelty by',
+    em: 'Exclusion Misconduct (EM)',
     ems: 'Exclusion Misconduct with Substitute (EMS)',
     brutality: 'brutality replacement for',
   }[multiEvent];
@@ -131,7 +135,9 @@ function EventControls({
         <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="penelty">
           Penelty
         </MultiEventButton>
-        
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="em">
+          EM
+        </MultiEventButton>
         <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="ems">
           EMS
         </MultiEventButton>
@@ -142,6 +148,7 @@ function EventControls({
     </div>
   );
 }
+
 function MultiEventButton({
   multiEvent,
   setMultiEvent,

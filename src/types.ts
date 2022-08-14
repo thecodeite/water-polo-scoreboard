@@ -55,6 +55,10 @@ export interface PeneltyEvent extends GameEventCap {
   name: 'penelty';
 }
 
+export interface EmEvent extends GameEventCap {
+  name: 'em';
+}
+
 export interface EmsEvent extends GameEventCap {
   name: 'ems';
 }
@@ -81,6 +85,7 @@ export type GameEvent =
   | GoalScoredEvent
   | ExclusionEvent
   | PeneltyEvent
+  | EmEvent
   | EmsEvent
   | BrutalityEvent
   | RestStartEvent
@@ -103,10 +108,16 @@ export interface Exclusion {
   start: number;
   end: number;
 }
+export interface OffenceCount {
+  count: number;
+  flag?: 'RED' | 'YELLOW';
+  noMoreEvents?: true;
+}
 
 export interface TeamStats {
   goals: number;
   exclusions: Exclusion[];
+  offenceCount: Record<CapEnum, OffenceCount>;
 }
 
 export interface Timer {
