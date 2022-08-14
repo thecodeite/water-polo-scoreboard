@@ -109,7 +109,8 @@ function SingleTeamControls({
               <button disabled={playerDisabled(cap)} onClick={() => tapCap(cap)}>
                 Cap {cap}
               </button>
-            </label>
+            </label>{' '}
+            <small>oc: {globalState[team].offenceCount[cap].count}</small>
           </div>
         ))}
       </div>
