@@ -79,7 +79,7 @@ function TeamStatsView({ clock, title, teamStats }: { clock: number; title: stri
       ) : undefined}
       {flags.length > 0 ? (
         <>
-          <ul>
+          <ul className="flags">
             {flags.map((flag) => (
               <li key={flag.cap}>
                 {flag.colour} FLAG {flag.cap}
