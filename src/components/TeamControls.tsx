@@ -84,7 +84,7 @@ function SingleTeamControls({
 
   const playerDisabled = (cap: CapEnum) => {
     if (unPaused) return true;
-    if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
+    // if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
     if (globalState[team].offenceCount[cap].noMoreEvents) return true;
     return false;
   };
