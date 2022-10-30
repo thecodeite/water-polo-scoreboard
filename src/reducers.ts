@@ -6,6 +6,7 @@ import {
   GameEventWithMatchTime,
   GlobalState,
   OffenceCount,
+  SupportStaff,
   TeamStats,
   Timer,
 } from './types';
@@ -290,6 +291,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           cap: event.cap,
           start: event.periodTime,
           end: event.periodTime + 20000,
+          showTimer: SupportStaff.includes(event.cap) ? undefined : true,
         };
         return {
           ...oldState,

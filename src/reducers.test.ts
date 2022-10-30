@@ -11,7 +11,7 @@ import {
   capPenalty,
 } from './events';
 import { reduceState, withMatchTime } from './reducers';
-import { CapEnum, GameEvent, GlobalState, Team } from './types';
+import { CapEnum, GameEvent, GlobalState, SupportStaff, Team } from './types';
 
 type Entry = [GameEvent | (() => GameEvent), number];
 
@@ -93,30 +93,43 @@ describe('undo function', () => {
 
 describe('exclusions', () => {
   describe('when an Exclusion event is recorded', () => {
-    const excludeCapOne = () => {
-      const exclude = capExclusion('white', CapEnum.One);
+    const excludeWhiteCap = (cap: CapEnum) => {
+      const exclude = capExclusion('white', cap);
       return setup(
         [startMatch, 1500], //
         [pauseMatch, 1000],
         [exclude, 0],
       );
     };
+
     it('the exclusion should be recorded in the teams exclusions', () => {
-      const state = excludeCapOne();
+      const state = excludeWhiteCap(CapEnum.One);
       const exclusion = state.white.exclusions[0];
       expect(exclusion.cap).toEqual(CapEnum.One);
     });
 
     it('the exclusion should start when the match was paused (1500 ms)', () => {
-      const state = excludeCapOne();
+      const state = excludeWhiteCap(CapEnum.One);
       const exclusion = state.white.exclusions[0];
       expect(exclusion.start).toEqual(1500);
     });
 
-    it('the exclusion should end  20 seconds (20,000 ms) after the offence started (21,500 ms)', () => {
-      const state = excludeCapOne();
+    it('the exclusion should end 20 seconds (20,000 ms) after the offence started (21,500 ms)', () => {
+      const state = excludeWhiteCap(CapEnum.One);
       const exclusion = state.white.exclusions[0];
       expect(exclusion.end).toEqual(21500);
+    });
+
+    it('should show the exclusion timer for players', () => {
+      const state = excludeWhiteCap(CapEnum.One);
+      const exclusion = state.white.exclusions[0];
+      expect(exclusion.showTimer).toEqual(true);
+    });
+
+    it.each(SupportStaff)('should not show the exclusion timer for support staff', (cap) => {
+      const state = excludeWhiteCap(cap);
+      const exclusion = state.white.exclusions[0];
+      expect(exclusion.showTimer).toEqual(undefined);
     });
   });
 
@@ -309,6 +322,7 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.noMoreEvents).toBe(true);
   });
 });
+
 describe('offences', () => {
   const eventsThatCountAsOffence: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
     { n: 'penalty', f: capPenalty },

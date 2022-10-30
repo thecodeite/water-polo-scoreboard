@@ -18,6 +18,8 @@ export enum CapEnum {
   TeamManager = 'TM',
 }
 
+export const SupportStaff = [CapEnum.HeadCoach, CapEnum.AssistantCoach, CapEnum.TeamManager];
+
 type TimeStamp = number;
 export interface GameEventBase {
   id: string;
@@ -107,6 +109,7 @@ export interface Exclusion {
   cap: CapEnum;
   start: number;
   end: number;
+  showTimer?: true;
 }
 export interface OffenceCount {
   count: number;
