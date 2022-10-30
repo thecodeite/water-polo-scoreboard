@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty } from '../events';
-import { calcTimes } from '../reducers';
+// import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
 
@@ -79,8 +79,8 @@ function SingleTeamControls({
     setMultiEvent('');
   };
 
-  const { matchTimer, periodTimer, restPeriodTimer } = globalState;
-  const clock = calcTimes(matchTimer, periodTimer, restPeriodTimer);
+  //  const { matchTimer, periodTimer, restPeriodTimer } = globalState;
+  //  const clock = calcTimes(matchTimer, periodTimer, restPeriodTimer);
 
   const playerDisabled = (cap: CapEnum) => {
     if (unPaused) return true;
