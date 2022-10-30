@@ -5,7 +5,7 @@ import './ScorerScreen.scss';
 
 export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
   const { matchTimer, periodTimer, restPeriodTimer, period } = globalState;
-  const [{ periodClock, restClock, matchClock }, setClock] = useState(
+  const [{ periodClock, restClock, matchClock, periodBump }, setClock] = useState(
     calcTimes(matchTimer, periodTimer, restPeriodTimer),
   );
 
@@ -44,7 +44,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
           Rest Time: {rt.minutes}:{rt.seconds}.{rt.tenths}{' '}
         </div>
       )}
-      <div>Period: {period + 1}</div>
+      <div>Period: {period + 1 + periodBump}</div>
       <div className="ScorerScreen-teams">
         <TeamStatsView clock={matchClock} title={'White'} teamStats={globalState.white} />
         <TeamStatsView clock={matchClock} title={'Blue'} teamStats={globalState.blue} />

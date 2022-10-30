@@ -395,17 +395,29 @@ export interface Times {
   periodClock: number;
   restClock: number;
   matchClock: number;
+  periodBump: 0 | 1;
 }
 
 export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer: Timer): Times {
   if (restPeriodTimer.at !== undefined) {
+    // Paused in rest period
     const clock = stamp() - restPeriodTimer.at;
     const restClock = Math.min(clock, REST_PERIOD_LENGTH_MS);
+
+    if (clock > REST_PERIOD_LENGTH_MS) {
+      return {
+        periodClock: PERIOD_LENGTH_MS,
+        restClock: -1,
+        matchClock: matchTimer.before,
+        periodBump: 1,
+      };
+    }
 
     return {
       periodClock: 0,
       restClock,
       matchClock: matchTimer.before,
+      periodBump: 0,
     };
   } else {
     const now = stamp();
@@ -424,6 +436,7 @@ export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer
       periodClock,
       restClock,
       matchClock,
+      periodBump: 0,
     };
   }
 }
