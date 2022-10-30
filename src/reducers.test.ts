@@ -134,7 +134,7 @@ describe('exclusions', () => {
       expect(state.white.exclusions.length).toEqual(0);
     });
 
-    it('should red flag a player after a single EM', () => {
+    it('should red card a player after a single EM', () => {
       const state = setup(
         [startMatch, 1000], //
         [pauseMatch, 1000],
@@ -143,7 +143,7 @@ describe('exclusions', () => {
 
       const oc = state.white.offenceCount[CapEnum.One];
       expect(oc.count).toEqual(1);
-      expect(oc.flag).toEqual('RED');
+      expect(oc.card).toEqual('RED');
       expect(oc.noMoreEvents).toEqual(true);
     });
   });
@@ -206,7 +206,7 @@ describe('exclusions', () => {
 });
 
 describe('multiple offences lead to red flag', () => {
-  it('shouls start all players with an offence count of 0', () => {
+  it('should start all players with an offence count of 0', () => {
     const state = setup();
 
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 0 });
@@ -250,7 +250,7 @@ describe('multiple offences lead to red flag', () => {
 
     const oc = state.white.offenceCount[CapEnum.One];
     expect(oc.count).toEqual(3);
-    expect(oc.flag).toEqual('RED');
+    expect(oc.redFlag).toEqual(true);
     expect(oc.noMoreEvents).toEqual(undefined);
   });
 
@@ -263,7 +263,7 @@ describe('multiple offences lead to red flag', () => {
 
     const oc = state.white.offenceCount[CapEnum.HeadCoach];
     expect(oc.count).toEqual(1);
-    expect(oc.flag).toBe('YELLOW');
+    expect(oc.card).toBe('YELLOW');
     expect(oc.noMoreEvents).toBeUndefined();
   });
 
@@ -279,7 +279,7 @@ describe('multiple offences lead to red flag', () => {
 
     const oc = state.white.offenceCount[CapEnum.HeadCoach];
     expect(oc.count).toEqual(2);
-    expect(oc.flag).toBe('RED');
+    expect(oc.card).toBe('RED');
     expect(oc.noMoreEvents).toBe(true);
   });
 
@@ -292,7 +292,7 @@ describe('multiple offences lead to red flag', () => {
 
     const oc = state.white.offenceCount[CapEnum.AssistantCoach];
     expect(oc.count).toEqual(1);
-    expect(oc.flag).toBe('RED');
+    expect(oc.card).toBe('RED');
     expect(oc.noMoreEvents).toBe(true);
   });
 
@@ -305,7 +305,7 @@ describe('multiple offences lead to red flag', () => {
 
     const oc = state.white.offenceCount[CapEnum.TeamManager];
     expect(oc.count).toEqual(1);
-    expect(oc.flag).toBe('RED');
+    expect(oc.card).toBe('RED');
     expect(oc.noMoreEvents).toBe(true);
   });
 });

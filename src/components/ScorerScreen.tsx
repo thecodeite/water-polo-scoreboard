@@ -57,9 +57,12 @@ function TeamStatsView({ clock, title, teamStats }: { clock: number; title: stri
   const pens = teamStats.exclusions
     .filter((p) => p.end > clock) //
     .map((p) => ({ ...p, t: p.end - clock }));
-  const flags = Object.entries(teamStats.offenceCount)
-    .filter(([, oc]) => oc.flag)
-    .map(([cap, oc]) => ({ cap, colour: oc.flag }));
+  const cards = Object.entries(teamStats.offenceCount)
+    .filter(([, oc]) => oc.card)
+    .map(([cap, oc]) => ({ cap, colour: oc.card }));
+  const redFlags = Object.entries(teamStats.offenceCount)
+    .filter(([, oc]) => oc.redFlag)
+    .map(([cap, oc]) => ({ cap, redFlag: true }));
 
   return (
     <div>
@@ -77,13 +80,22 @@ function TeamStatsView({ clock, title, teamStats }: { clock: number; title: stri
           </ul>
         </>
       ) : undefined}
-      {flags.length > 0 ? (
+      {cards.length > 0 ? (
         <>
           <ul className="flags">
-            {flags.map((flag) => (
-              <li key={flag.cap}>
-                {flag.colour} FLAG {flag.cap}
+            {cards.map((card) => (
+              <li key={card.cap}>
+                {card.colour} CARD {card.cap}
               </li>
+            ))}
+          </ul>
+        </>
+      ) : undefined}
+      {redFlags.length > 0 ? (
+        <>
+          <ul className="flags">
+            {redFlags.map((flag) => (
+              <li key={flag.cap}>RED FLAG {flag.cap}</li>
             ))}
           </ul>
         </>

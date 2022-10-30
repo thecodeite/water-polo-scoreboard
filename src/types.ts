@@ -110,7 +110,8 @@ export interface Exclusion {
 }
 export interface OffenceCount {
   count: number;
-  flag?: 'RED' | 'YELLOW';
+  redFlag?: true;
+  card?: 'RED' | 'YELLOW';
   noMoreEvents?: true;
 }
 

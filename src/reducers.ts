@@ -375,18 +375,18 @@ function calcOffenceCount(oldTeamState: TeamStats, cap: CapEnum, options?: { em?
   const newCount = oldTeamState.offenceCount[cap].count + 1;
 
   if (options?.em) {
-    return { count: newCount, flag: 'RED', noMoreEvents: true };
+    return { count: newCount, card: 'RED', noMoreEvents: true };
   }
 
   if (cap === CapEnum.HeadCoach) {
-    return { count: newCount, flag: newCount === 1 ? 'YELLOW' : 'RED', noMoreEvents: newCount > 1 ? true : undefined };
+    return { count: newCount, card: newCount === 1 ? 'YELLOW' : 'RED', noMoreEvents: newCount > 1 ? true : undefined };
   }
 
   if (cap === CapEnum.AssistantCoach || cap === CapEnum.TeamManager) {
-    return { count: newCount, flag: 'RED', noMoreEvents: true };
+    return { count: newCount, card: 'RED', noMoreEvents: true };
   }
 
-  return { count: newCount, flag: newCount >= 3 ? 'RED' : undefined };
+  return { count: newCount, redFlag: newCount >= 3 ? true : undefined };
 }
 
 export interface Times {
