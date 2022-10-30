@@ -129,22 +129,22 @@ describe('exclusions', () => {
         [exclude, 0],
       );
     };
-    it('the exclusion should be recorded in the teams exclusions', () => {
+    it('the exclusion should not recorded in the teams exclusions', () => {
       const state = emCapOne();
-      const exclusion = state.white.exclusions[0];
-      expect(exclusion.cap).toEqual(CapEnum.One);
+      expect(state.white.exclusions.length).toEqual(0);
     });
 
-    it('the exclusion should start when the match was paused (1500 ms)', () => {
-      const state = emCapOne();
-      const exclusion = state.white.exclusions[0];
-      expect(exclusion.start).toEqual(1500);
-    });
+    it('should red flag a player after a single EM', () => {
+      const state = setup(
+        [startMatch, 1000], //
+        [pauseMatch, 1000],
+        [capEm('white', CapEnum.One), 1000],
+      );
 
-    it('the exclusion should end 20 seconds (20,000 ms) the offence started (21,500 ms)', () => {
-      const state = emCapOne();
-      const exclusion = state.white.exclusions[0];
-      expect(exclusion.end).toEqual(21500);
+      const oc = state.white.offenceCount[CapEnum.One];
+      expect(oc.count).toEqual(1);
+      expect(oc.flag).toEqual('RED');
+      expect(oc.noMoreEvents).toEqual(true);
     });
   });
 
@@ -313,7 +313,6 @@ describe('offences', () => {
   const eventsThatCountAsOffence: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
     { n: 'penelty', f: capPenelty },
     { n: 'exclusion', f: capExclusion },
-    { n: 'em', f: capEm },
     { n: 'ems', f: capEms },
     { n: 'brutality', f: capBrutality },
   ];

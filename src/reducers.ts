@@ -305,21 +305,14 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'em': {
         const oldTeamState = oldState[event.team];
-        const newExlcusion: Exclusion = {
-          id: event.id,
-          cap: event.cap,
-          start: event.periodTime,
-          end: event.periodTime + 20000,
-        };
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
             offenceCount: {
               ...oldTeamState.offenceCount,
-              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap, { em: true }),
             },
-            exclusions: [...oldTeamState.exclusions, newExlcusion],
           },
         };
       }
@@ -378,8 +371,12 @@ export function reduceState(events: GameEventWithMatchTime[]) {
   return state;
 }
 
-function calcOffenceCount(oldTeamState: TeamStats, cap: CapEnum): OffenceCount {
+function calcOffenceCount(oldTeamState: TeamStats, cap: CapEnum, options?: { em?: boolean }): OffenceCount {
   const newCount = oldTeamState.offenceCount[cap].count + 1;
+
+  if (options?.em) {
+    return { count: newCount, flag: 'RED', noMoreEvents: true };
+  }
 
   if (cap === CapEnum.HeadCoach) {
     return { count: newCount, flag: newCount === 1 ? 'YELLOW' : 'RED', noMoreEvents: newCount > 1 ? true : undefined };
