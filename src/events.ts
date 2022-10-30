@@ -9,7 +9,7 @@ import {
   GoalScoredEvent,
   MatchPauseEvent,
   MatchStartEvent,
-  PeneltyEvent,
+  PenaltyEvent,
   Team,
   UndoEventsEvent,
 } from './types';
@@ -61,10 +61,10 @@ export function capExclusion(team: Team, cap: CapEnum): ExclusionEvent {
   };
 }
 
-export function capPenelty(team: Team, cap: CapEnum): PeneltyEvent {
+export function capPenalty(team: Team, cap: CapEnum): PenaltyEvent {
   return {
     ...baseEvent(),
-    name: 'penelty',
+    name: 'penalty',
     team,
     cap,
   };

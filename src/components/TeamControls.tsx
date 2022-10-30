@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenelty } from '../events';
+import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty } from '../events';
 import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
@@ -45,7 +45,7 @@ export function TeamControls({
 
 const caps = Object.values(CapEnum);
 
-type MultiEvent = '' | 'goal' | 'penelty' | 'em' | 'ems' | 'brutality';
+type MultiEvent = '' | 'goal' | 'penalty' | 'em' | 'ems' | 'brutality';
 
 function SingleTeamControls({
   addEvent,
@@ -67,8 +67,8 @@ function SingleTeamControls({
       addEvent(capExclusion(team, cap));
     } else if (multiEvent === 'goal') {
       addEvent(goalScored(team, cap));
-    } else if (multiEvent === 'penelty') {
-      addEvent(capPenelty(team, cap));
+    } else if (multiEvent === 'penalty') {
+      addEvent(capPenalty(team, cap));
     } else if (multiEvent === 'em') {
       addEvent(capEm(team, cap));
     } else if (multiEvent === 'ems') {
@@ -92,7 +92,7 @@ function SingleTeamControls({
   const pressAction = {
     '': 'Exclusion',
     goal: 'goal scored by',
-    penelty: 'Penelty by',
+    penalty: 'Penalty by',
     em: 'Exclusion Misconduct (EM)',
     ems: 'Exclusion Misconduct with Substitute (EMS)',
     brutality: 'brutality replacement for',
@@ -133,8 +133,8 @@ function EventControls({
         <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="goal">
           Goal
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="penelty">
-          Penelty
+        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="penalty">
+          Penalty
         </MultiEventButton>
         <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="em">
           EM

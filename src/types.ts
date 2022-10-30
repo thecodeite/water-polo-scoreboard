@@ -51,8 +51,8 @@ export interface ExclusionEvent extends GameEventCap {
   name: 'exclusion';
 }
 
-export interface PeneltyEvent extends GameEventCap {
-  name: 'penelty';
+export interface PenaltyEvent extends GameEventCap {
+  name: 'penalty';
 }
 
 export interface EmEvent extends GameEventCap {
@@ -67,7 +67,7 @@ export interface BrutalityEvent extends GameEventCap {
   name: 'brutality';
 }
 
-/* Vistual Events */
+/* Visual Events */
 export interface GameEventVirtual extends GameEventBase {
   isVirtual: boolean;
 }
@@ -84,7 +84,7 @@ export type GameEvent =
   | MatchStartEvent
   | GoalScoredEvent
   | ExclusionEvent
-  | PeneltyEvent
+  | PenaltyEvent
   | EmEvent
   | EmsEvent
   | BrutalityEvent

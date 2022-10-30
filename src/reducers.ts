@@ -269,7 +269,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           },
         };
       }
-      case 'penelty': {
+      case 'penalty': {
         const oldTeamState = oldState[event.team];
 
         return {
@@ -285,7 +285,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'exclusion': {
         const oldTeamState = oldState[event.team];
-        const newExlcusion: Exclusion = {
+        const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
           start: event.periodTime,
@@ -299,7 +299,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap),
             },
-            exclusions: [...oldTeamState.exclusions, newExlcusion],
+            exclusions: [...oldTeamState.exclusions, newExclusion],
           },
         };
       }
@@ -318,7 +318,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'ems': {
         const oldTeamState = oldState[event.team];
-        const newExlcusion: Exclusion = {
+        const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
           start: event.periodTime,
@@ -328,7 +328,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [...oldTeamState.exclusions, newExlcusion],
+            exclusions: [...oldTeamState.exclusions, newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap),
@@ -338,7 +338,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'brutality': {
         const oldTeamState = oldState[event.team];
-        const newExlcusion: Exclusion = {
+        const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
           start: event.periodTime,
@@ -349,7 +349,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [...oldTeamState.exclusions, newExlcusion],
+            exclusions: [...oldTeamState.exclusions, newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap),

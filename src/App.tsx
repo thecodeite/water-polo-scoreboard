@@ -40,7 +40,7 @@ function App() {
     setEvents((oldEvents) => oldEvents.map((event) => ({ ...event, timestamp: event.timestamp - time })));
   };
 
-  const resetToNeop = () => {
+  const resetToNearEndOfPeriod = () => {
     setEvents(
       buildTimeline(
         //
@@ -65,7 +65,7 @@ function App() {
       <div>
         <button onClick={() => reset()}>Reset</button>
         {'( Debug: '}
-        <button onClick={() => resetToNeop()}>Near end of Period</button>
+        <button onClick={() => resetToNearEndOfPeriod()}>Near end of Period</button>
         <button onClick={() => resetToNextPeriod()}>Next period</button>{' '}
         <button onClick={() => plusTime(60 * 1000)}>+1:00</button>
         <button onClick={() => plusTime(10 * 1000)}>+0:10</button>

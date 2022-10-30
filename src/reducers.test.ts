@@ -8,7 +8,7 @@ import {
   undoEvents,
   capEms,
   capBrutality,
-  capPenelty,
+  capPenalty,
 } from './events';
 import { reduceState, withMatchTime } from './reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from './types';
@@ -212,40 +212,40 @@ describe('multiple offences lead to red flag', () => {
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 0 });
   });
 
-  it('should not flag a player after one penelty but increase the offence count to 1', () => {
+  it('should not flag a player after one penalty but increase the offence count to 1', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
     );
 
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 1 });
   });
 
-  it('should not flag a player after two penelties but increace the offence count to 2', () => {
+  it('should not flag a player after two penalties but increase the offence count to 2', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
     );
 
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 2 });
   });
 
-  it('should red flag a player after three penelties and increase the offence count to 3 and can still have more events', () => {
+  it('should red flag a player after three penalties and increase the offence count to 3 and can still have more events', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.One), 1000],
+      [capPenalty('white', CapEnum.One), 1000],
     );
 
     const oc = state.white.offenceCount[CapEnum.One];
@@ -254,11 +254,11 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.noMoreEvents).toEqual(undefined);
   });
 
-  it('should yellow flag the Head Coach after 1 penelty and increase the offence count to 1 and can still have more events', () => {
+  it('should yellow flag the Head Coach after 1 penalty and increase the offence count to 1 and can still have more events', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.HeadCoach), 1000],
+      [capPenalty('white', CapEnum.HeadCoach), 1000],
     );
 
     const oc = state.white.offenceCount[CapEnum.HeadCoach];
@@ -267,14 +267,14 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.noMoreEvents).toBeUndefined();
   });
 
-  it('should red flag the Head Coach after 2 penelties and increase the offence count to 2 and can not have more events', () => {
+  it('should red flag the Head Coach after 2 penalties and increase the offence count to 2 and can not have more events', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.HeadCoach), 1000],
+      [capPenalty('white', CapEnum.HeadCoach), 1000],
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.HeadCoach), 1000],
+      [capPenalty('white', CapEnum.HeadCoach), 1000],
     );
 
     const oc = state.white.offenceCount[CapEnum.HeadCoach];
@@ -283,11 +283,11 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.noMoreEvents).toBe(true);
   });
 
-  it('should red flag the Assistant Coach after 1 penelty and increase the offence count to 1 and can not have more events', () => {
+  it('should red flag the Assistant Coach after 1 penalty and increase the offence count to 1 and can not have more events', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.AssistantCoach), 1000],
+      [capPenalty('white', CapEnum.AssistantCoach), 1000],
     );
 
     const oc = state.white.offenceCount[CapEnum.AssistantCoach];
@@ -296,11 +296,11 @@ describe('multiple offences lead to red flag', () => {
     expect(oc.noMoreEvents).toBe(true);
   });
 
-  it('should red flag the Team Manager after 1 penelty and increase the offence count to 1 and can not have more events', () => {
+  it('should red flag the Team Manager after 1 penalty and increase the offence count to 1 and can not have more events', () => {
     const state = setup(
       [startMatch, 1000], //
       [pauseMatch, 1000],
-      [capPenelty('white', CapEnum.TeamManager), 1000],
+      [capPenalty('white', CapEnum.TeamManager), 1000],
     );
 
     const oc = state.white.offenceCount[CapEnum.TeamManager];
@@ -311,7 +311,7 @@ describe('multiple offences lead to red flag', () => {
 });
 describe('offences', () => {
   const eventsThatCountAsOffence: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
-    { n: 'penelty', f: capPenelty },
+    { n: 'penalty', f: capPenalty },
     { n: 'exclusion', f: capExclusion },
     { n: 'ems', f: capEms },
     { n: 'brutality', f: capBrutality },
