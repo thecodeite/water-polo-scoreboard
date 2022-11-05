@@ -11,6 +11,7 @@ import {
   MatchStartEvent,
   PenaltyEvent,
   Team,
+  TimeoutEvent,
   UndoEventsEvent,
 } from './types';
 
@@ -94,6 +95,14 @@ export function capBrutality(team: Team, cap: CapEnum): BrutalityEvent {
     name: 'brutality',
     team,
     cap,
+  };
+}
+
+export function teamTimeout(team: Team): TimeoutEvent {
+  return {
+    ...baseEvent(),
+    name: 'timeout',
+    team,
   };
 }
 

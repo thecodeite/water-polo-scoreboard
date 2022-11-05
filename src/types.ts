@@ -29,8 +29,10 @@ export interface GameEventBase {
   cap?: CapEnum;
 }
 
-export interface GameEventCap extends GameEventBase {
+export interface GameEventTeam extends GameEventBase {
   team: Team;
+}
+export interface GameEventCap extends GameEventTeam {
   cap: CapEnum;
 }
 
@@ -69,6 +71,11 @@ export interface BrutalityEvent extends GameEventCap {
   name: 'brutality';
 }
 
+/* Team events */
+export interface TimeoutEvent extends GameEventTeam {
+  name: 'timeout';
+}
+
 /* Visual Events */
 export interface GameEventVirtual extends GameEventBase {
   isVirtual: boolean;
@@ -90,6 +97,7 @@ export type GameEvent =
   | EmEvent
   | EmsEvent
   | BrutalityEvent
+  | TimeoutEvent
   | RestStartEvent
   | PeriodEndEvent
   | UndoEventsEvent;

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty } from '../events';
+import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty, teamTimeout } from '../events';
 // import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
@@ -113,6 +113,15 @@ function SingleTeamControls({
             <small>oc: {globalState[team].offenceCount[cap].count}</small>
           </div>
         ))}
+
+        <div style={{ marginTop: '8px' }}>
+          <label>
+            Press for Timeout
+            <button disabled={unPaused} onClick={() => addEvent(teamTimeout(team))}>
+              T
+            </button>
+          </label>{' '}
+        </div>
       </div>
     </div>
   );
