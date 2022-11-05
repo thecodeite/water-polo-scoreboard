@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { gameRules } from '../gameRules';
 import { calcTimes } from '../reducers';
 import { GlobalState, TeamStats } from '../types';
 import './ScorerScreen.scss';
@@ -64,10 +65,12 @@ function TeamStatsView({ clock, title, teamStats }: { clock: number; title: stri
     .filter(([, oc]) => oc.redFlag)
     .map(([cap, oc]) => ({ cap, redFlag: true }));
 
+  const timeoutsTaken = gameRules.timeoutCount - teamStats.timeoutsLeft;
   return (
     <div>
       <h2>{title}</h2>
       <div className="ScorerScreen-score">{teamStats.goals}</div>
+      <div className="ScorerScreen-score">T {timeoutsTaken}</div>
       {pens.length > 0 ? (
         <>
           <div>Exclusions</div>

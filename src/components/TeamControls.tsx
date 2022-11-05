@@ -116,8 +116,11 @@ function SingleTeamControls({
 
         <div style={{ marginTop: '8px' }}>
           <label>
-            Press for Timeout
-            <button disabled={unPaused} onClick={() => addEvent(teamTimeout(team))}>
+            Press for Timeout{' '}
+            <button
+              disabled={unPaused || globalState[team].timeoutsLeft <= 0}
+              onClick={() => addEvent(teamTimeout(team))}
+            >
               T
             </button>
           </label>{' '}

@@ -1,4 +1,5 @@
 import { stamp } from './events';
+import { gameRules } from './gameRules';
 import {
   CapEnum,
   Exclusion,
@@ -129,11 +130,13 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       goals: 0,
       exclusions: [],
       offenceCount: makeZeroOffenceCount(),
+      timeoutsLeft: gameRules.timeoutCount,
     },
     blue: {
       goals: 0,
       exclusions: [],
       offenceCount: makeZeroOffenceCount(),
+      timeoutsLeft: gameRules.timeoutCount,
     },
 
     matchTimer: {
@@ -356,6 +359,16 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap),
             },
+          },
+        };
+      }
+      case 'timeout': {
+        const oldTeamState = oldState[event.team];
+        return {
+          ...oldState,
+          [event.team]: {
+            ...oldTeamState,
+            timeoutsLeft: oldTeamState.timeoutsLeft - 1,
           },
         };
       }

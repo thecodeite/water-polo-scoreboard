@@ -130,6 +130,7 @@ export interface TeamStats {
   goals: number;
   exclusions: Exclusion[];
   offenceCount: Record<CapEnum, OffenceCount>;
+  timeoutsLeft: number;
 }
 
 export interface Timer {

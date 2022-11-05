@@ -9,6 +9,7 @@ import {
   capEms,
   capBrutality,
   capPenalty,
+  teamTimeout,
 } from './events';
 import { reduceState, withMatchTime } from './reducers';
 import { CapEnum, GameEvent, GlobalState, SupportStaff, Team } from './types';
@@ -339,5 +340,36 @@ describe('offences', () => {
     );
 
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 1 });
+  });
+});
+
+describe('timeouts', () => {
+  it('should start with 2 timeouts left', () => {
+    const state = setup();
+
+    expect(state.white.timeoutsLeft).toEqual(2);
+  });
+
+  it('should decrease timeout count when used', () => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [teamTimeout('white'), 1000],
+    );
+
+    expect(state.white.timeoutsLeft).toEqual(1);
+  });
+
+  it('should decrease timeout count when used again', () => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [teamTimeout('white'), 1000],
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [teamTimeout('white'), 1000],
+    );
+
+    expect(state.white.timeoutsLeft).toEqual(0);
   });
 });
