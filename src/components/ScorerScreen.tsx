@@ -70,7 +70,7 @@ function TeamStatsView({ clock, title, teamStats }: { clock: number; title: stri
     <div>
       <h2>{title}</h2>
       <div className="ScorerScreen-score">{teamStats.goals}</div>
-      <div className="ScorerScreen-score">T {timeoutsTaken}</div>
+      <div className="ScorerScreen-timeouts">T {timeoutsTaken}</div>
       {pens.length > 0 ? (
         <>
           <div>Exclusions</div>
