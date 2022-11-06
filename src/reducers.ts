@@ -367,7 +367,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             exclusions: [...oldTeamState.exclusions, newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
-              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap, { em: true }),
             },
           },
         };
@@ -388,7 +388,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             exclusions: [...oldTeamState.exclusions, newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
-              [event.cap]: calcOffenceCount(oldTeamState, event.cap),
+              [event.cap]: calcOffenceCount(oldTeamState, event.cap, { em: true }),
             },
           },
         };

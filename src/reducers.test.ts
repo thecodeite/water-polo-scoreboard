@@ -328,8 +328,6 @@ describe('offences', () => {
   const eventsThatCountAsOffence: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
     { n: 'penalty', f: capPenalty },
     { n: 'exclusion', f: capExclusion },
-    { n: 'ems', f: capEms },
-    { n: 'brutality', f: capBrutality },
   ];
 
   it.each(eventsThatCountAsOffence)('should increase the offence count for a $n', ({ f }) => {
@@ -340,6 +338,26 @@ describe('offences', () => {
     );
 
     expect(state.white.offenceCount[CapEnum.One]).toEqual({ count: 1 });
+  });
+
+  const eventsThatCountAsRedCard: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
+    { n: 'ems', f: capEms },
+    { n: 'em', f: capEm },
+    { n: 'brutality', f: capBrutality },
+  ];
+
+  it.each(eventsThatCountAsRedCard)('should give a red card for a $n', ({ f }) => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [f('white', CapEnum.One), 1000],
+    );
+
+    expect(state.white.offenceCount[CapEnum.One]).toEqual({
+      card: 'RED',
+      count: 1,
+      noMoreEvents: true,
+    });
   });
 });
 
