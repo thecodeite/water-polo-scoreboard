@@ -60,6 +60,8 @@ function App() {
     );
   };
 
+  const unPaused = !!globalState?.timers.matchTimer?.at;
+
   return (
     <div className="App">
       <div>
@@ -75,7 +77,7 @@ function App() {
         <>
           <ScorerScreen globalState={globalState} />
           <GlobalControls globalState={globalState} addEvent={addEvent} />
-          <TeamControls globalState={globalState} unPaused={!!globalState.timers.matchTimer?.at} addEvent={addEvent} />
+          <TeamControls globalState={globalState} unPaused={unPaused} addEvent={addEvent} />
         </>
       )}
       <EventLog events={eventsWithMatchTime} deletedEvents={globalState?.deletedEvents} />

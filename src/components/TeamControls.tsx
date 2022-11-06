@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty, teamTimeout } from '../events';
+import { calcTimes } from '../reducers';
 // import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, Team } from '../types';
 import { Led } from './Led';
@@ -17,6 +18,18 @@ export function TeamControls({
 }) {
   const [multiEvent, setMultiEvent] = useState<MultiEvent>('');
 
+  const [{ inTimeout }, setClock] = useState(calcTimes(globalState.timers));
+
+  const disableControls = unPaused || inTimeout;
+  useEffect(() => {
+    setClock(calcTimes(globalState.timers));
+    const h = setInterval(() => {
+      setClock(calcTimes(globalState.timers));
+    }, 50);
+
+    return () => clearInterval(h);
+  }, [globalState.timers]);
+
   return (
     <div className="TeamControls">
       <div className="TeamControls-split">
@@ -25,7 +38,7 @@ export function TeamControls({
           setMultiEvent={setMultiEvent}
           team="white"
           addEvent={addEvent}
-          unPaused={unPaused}
+          disableControls={disableControls}
           globalState={globalState}
         />
         <SingleTeamControls
@@ -33,12 +46,12 @@ export function TeamControls({
           setMultiEvent={setMultiEvent}
           team="blue"
           addEvent={addEvent}
-          unPaused={unPaused}
+          disableControls={disableControls}
           globalState={globalState}
         />
       </div>
       <hr />
-      <EventControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} unPaused={unPaused} />
+      <EventControls multiEvent={multiEvent} setMultiEvent={setMultiEvent} disableControls={disableControls} />
     </div>
   );
 }
@@ -52,14 +65,14 @@ function SingleTeamControls({
   team,
   multiEvent,
   setMultiEvent,
-  unPaused,
+  disableControls,
   globalState,
 }: {
   addEvent: (newEvent: GameEvent) => void;
   team: Team;
   multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
-  unPaused: boolean;
+  disableControls: boolean;
   globalState: GlobalState;
 }) {
   const tapCap = (cap: CapEnum) => {
@@ -83,7 +96,7 @@ function SingleTeamControls({
   //  const clock = calcTimes(matchTimer, periodTimer, restPeriodTimer);
 
   const playerDisabled = (cap: CapEnum) => {
-    if (unPaused) return true;
+    if (disableControls) return true;
     // if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
     if (globalState[team].offenceCount[cap].noMoreEvents) return true;
     return false;
@@ -118,7 +131,7 @@ function SingleTeamControls({
           <label>
             Press for Timeout{' '}
             <button
-              disabled={unPaused || globalState[team].timeoutsLeft <= 0}
+              disabled={disableControls || globalState[team].timeoutsLeft <= 0}
               onClick={() => addEvent(teamTimeout(team))}
             >
               T
@@ -133,28 +146,28 @@ function SingleTeamControls({
 function EventControls({
   multiEvent,
   setMultiEvent,
-  unPaused,
+  disableControls,
 }: {
   multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
-  unPaused: boolean;
+  disableControls: boolean;
 }) {
   return (
     <div className="EventControls">
       <div className="EventControls-center-box">
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="goal">
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="goal">
           Goal
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="penalty">
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="penalty">
           Penalty
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="em">
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="em">
           EM
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="ems">
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="ems">
           EMS
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, unPaused }} eventName="brutality">
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="brutality">
           Brutality
         </MultiEventButton>
       </div>
@@ -165,13 +178,13 @@ function EventControls({
 function MultiEventButton({
   multiEvent,
   setMultiEvent,
-  unPaused,
+  disableControls,
   eventName,
   children,
 }: {
   multiEvent: MultiEvent;
   setMultiEvent: Dispatch<SetStateAction<MultiEvent>>;
-  unPaused: boolean;
+  disableControls: boolean;
   eventName: MultiEvent;
   children: string;
 }) {
@@ -179,7 +192,7 @@ function MultiEventButton({
     <label>
       <Led on={multiEvent === eventName} />
       <button
-        disabled={unPaused}
+        disabled={disableControls}
         onClick={() => setMultiEvent((existing: string) => (existing !== eventName ? eventName : ''))}
       >
         {children}
