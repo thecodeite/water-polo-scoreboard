@@ -13,10 +13,10 @@ export function GlobalControls({
 }) {
   return (
     <div className="GlobalControls">
-      <button disabled={!!globalState.matchTimer.at} onClick={() => addEvent(startMatch())}>
+      <button disabled={!!globalState.timers.matchTimer.at} onClick={() => addEvent(startMatch())}>
         Start Match
       </button>
-      <button disabled={!globalState.matchTimer.at} onClick={() => addEvent(pauseMatch())}>
+      <button disabled={!globalState.timers.matchTimer.at} onClick={() => addEvent(pauseMatch())}>
         Pause Match
       </button>
       <button

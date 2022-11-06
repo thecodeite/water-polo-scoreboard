@@ -6,10 +6,10 @@ import {
   GameEvent,
   GameEventWithMatchTime,
   GlobalState,
+  GlobalTimers,
   OffenceCount,
   SupportStaff,
   TeamStats,
-  Timer,
 } from './types';
 
 const PERIOD_LENGTH_MS = 8 * 60 * 1000;
@@ -138,18 +138,23 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       offenceCount: makeZeroOffenceCount(),
       timeoutsLeft: gameRules.timeoutCount,
     },
-
-    matchTimer: {
-      at: undefined,
-      before: 0,
-    },
-    periodTimer: {
-      at: undefined,
-      before: 0,
-    },
-    restPeriodTimer: {
-      at: undefined,
-      before: 0,
+    timers: {
+      matchTimer: {
+        at: undefined,
+        before: 0,
+      },
+      periodTimer: {
+        at: undefined,
+        before: 0,
+      },
+      restPeriodTimer: {
+        at: undefined,
+        before: 0,
+      },
+      timeoutTimer: {
+        at: undefined,
+        before: 0,
+      },
     },
 
     eventsToUndo: [],
@@ -175,18 +180,20 @@ export function reduceState(events: GameEventWithMatchTime[]) {
 
           return {
             ...oldState,
-
-            matchTimer: {
-              at: undefined,
-              before: event.matchTime,
-            },
-            periodTimer: {
-              at: undefined,
-              before: event.periodTime,
-            },
-            restPeriodTimer: {
-              at: event.timestamp - event.restPeriodTime,
-              before: event.restPeriodTime,
+            timers: {
+              ...oldState.timers,
+              matchTimer: {
+                at: undefined,
+                before: event.matchTime,
+              },
+              periodTimer: {
+                at: undefined,
+                before: event.periodTime,
+              },
+              restPeriodTimer: {
+                at: event.timestamp - event.restPeriodTime,
+                before: event.restPeriodTime,
+              },
             },
 
             eventsToUndo: [],
@@ -196,13 +203,16 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         return {
           ...oldState,
 
-          matchTimer: {
-            at: undefined,
-            before: event.matchTime,
-          },
-          periodTimer: {
-            at: undefined,
-            before: event.periodTime,
+          timers: {
+            ...oldState.timers,
+            matchTimer: {
+              at: undefined,
+              before: event.matchTime,
+            },
+            periodTimer: {
+              at: undefined,
+              before: event.periodTime,
+            },
           },
 
           eventsToUndo: [],
@@ -214,17 +224,24 @@ export function reduceState(events: GameEventWithMatchTime[]) {
             ...oldState,
             period: event.period,
 
-            matchTimer: {
-              at: event.timestamp,
-              before: event.matchTime,
-            },
-            periodTimer: {
-              at: event.timestamp,
-              before: event.periodTime,
-            },
-            restPeriodTimer: {
-              at: undefined,
-              before: 0,
+            timers: {
+              ...oldState.timers,
+              matchTimer: {
+                at: event.timestamp,
+                before: event.matchTime,
+              },
+              periodTimer: {
+                at: event.timestamp,
+                before: event.periodTime,
+              },
+              restPeriodTimer: {
+                at: undefined,
+                before: 0,
+              },
+              timeoutTimer: {
+                at: undefined,
+                before: 0,
+              },
             },
 
             eventsToUndo: [],
@@ -233,13 +250,20 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           // Start of match
           return {
             ...oldState,
-            matchTimer: {
-              at: event.timestamp,
-              before: event.matchTime,
-            },
-            periodTimer: {
-              at: event.timestamp,
-              before: event.periodTime,
+            timers: {
+              ...oldState.timers,
+              matchTimer: {
+                at: event.timestamp,
+                before: event.matchTime,
+              },
+              periodTimer: {
+                at: event.timestamp,
+                before: event.periodTime,
+              },
+              timeoutTimer: {
+                at: undefined,
+                before: 0,
+              },
             },
 
             eventsToUndo: [],
@@ -251,13 +275,20 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         return {
           ...oldState,
 
-          matchTimer: {
-            at: event.timestamp,
-            before: event.matchTime,
-          },
-          periodTimer: {
-            at: event.timestamp,
-            before: event.periodTime,
+          timers: {
+            ...oldState.timers,
+            matchTimer: {
+              at: event.timestamp,
+              before: event.matchTime,
+            },
+            periodTimer: {
+              at: event.timestamp,
+              before: event.periodTime,
+            },
+            timeoutTimer: {
+              at: undefined,
+              before: 0,
+            },
           },
 
           eventsToUndo: [],
@@ -366,6 +397,13 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         const oldTeamState = oldState[event.team];
         return {
           ...oldState,
+          timers: {
+            ...oldState.timers,
+            timeoutTimer: {
+              at: event.timestamp,
+              before: event.matchTime,
+            },
+          },
           [event.team]: {
             ...oldTeamState,
             timeoutsLeft: oldTeamState.timeoutsLeft - 1,
@@ -408,10 +446,13 @@ export interface Times {
   periodClock: number;
   restClock: number;
   matchClock: number;
+  timeoutClock: number;
+  inTimeout: boolean;
+  showTimeout: boolean;
   periodBump: 0 | 1;
 }
 
-export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer: Timer): Times {
+export function calcTimes({ matchTimer, periodTimer, restPeriodTimer, timeoutTimer }: GlobalTimers): Times {
   if (restPeriodTimer.at !== undefined) {
     // Paused in rest period
     const clock = stamp() - restPeriodTimer.at;
@@ -422,6 +463,9 @@ export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer
         periodClock: PERIOD_LENGTH_MS,
         restClock: -1,
         matchClock: matchTimer.before,
+        timeoutClock: 0,
+        inTimeout: false,
+        showTimeout: false,
         periodBump: 1,
       };
     }
@@ -430,6 +474,9 @@ export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer
       periodClock: 0,
       restClock,
       matchClock: matchTimer.before,
+      timeoutClock: 0,
+      inTimeout: false,
+      showTimeout: false,
       periodBump: 0,
     };
   } else {
@@ -445,10 +492,17 @@ export function calcTimes(matchTimer: Timer, periodTimer: Timer, restPeriodTimer
     const matchClockTotal = matchTimer.before + matchClockDelta;
     const matchClock = periodTimeLeft > 0 ? matchClockTotal : matchClockTotal + periodTimeLeft;
 
+    const timeoutClockUnbound = timeoutTimer.at && !periodTimer.at ? now - timeoutTimer.at : 0;
+    const inTimeout = timeoutClockUnbound > 0 && timeoutClockUnbound < gameRules.timeoutLength;
+    const showTimeout = timeoutClockUnbound > 0;
+    const timeoutClock = timeoutClockUnbound > gameRules.timeoutLength ? gameRules.timeoutLength : timeoutClockUnbound;
     return {
       periodClock,
       restClock,
       matchClock,
+      timeoutClock,
+      inTimeout,
+      showTimeout,
       periodBump: 0,
     };
   }

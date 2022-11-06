@@ -4,47 +4,39 @@ import { calcTimes } from '../reducers';
 import { GlobalState, TeamStats } from '../types';
 import './ScorerScreen.scss';
 
+function timeParts(clock: number) {
+  const minutes = Math.floor(clock / 60000).toString();
+  const seconds = Math.floor((clock % 60000) / 1000)
+    .toString()
+    .padStart(2, '0');
+  const tenths = Math.floor((clock % 1000) / 100).toString();
+  return `${minutes}:${seconds}.${tenths}`;
+}
+
 export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
-  const { matchTimer, periodTimer, restPeriodTimer, period } = globalState;
-  const [{ periodClock, restClock, matchClock, periodBump }, setClock] = useState(
-    calcTimes(matchTimer, periodTimer, restPeriodTimer),
+  const { timers, period } = globalState;
+  const [{ periodClock, restClock, matchClock, timeoutClock, showTimeout, periodBump }, setClock] = useState(
+    calcTimes(timers),
   );
 
   useEffect(() => {
-    setClock(calcTimes(matchTimer, periodTimer, restPeriodTimer));
+    setClock(calcTimes(timers));
     const h = setInterval(() => {
-      setClock(calcTimes(matchTimer, periodTimer, restPeriodTimer));
+      setClock(calcTimes(timers));
     }, 50);
 
     return () => clearInterval(h);
-  }, [matchTimer, periodTimer, restPeriodTimer]);
+  }, [timers]);
 
-  const tl = {
-    minutes: Math.floor(periodClock / 60000).toString(),
-    seconds: Math.floor((periodClock % 60000) / 1000)
-      .toString()
-      .padStart(2, '0'),
-    tenths: Math.floor((periodClock % 1000) / 100).toString(),
-  };
+  const mt = timeParts(periodClock);
+  const rt = timeParts(restClock);
+  const tt = timeParts(timeoutClock);
 
-  const rt = {
-    minutes: Math.floor(restClock / 60000).toString(),
-    seconds: Math.floor((restClock % 60000) / 1000)
-      .toString()
-      .padStart(2, '0'),
-    tenths: Math.floor((restClock % 1000) / 100).toString(),
-  };
   return (
     <div className="ScorerScreen">
-      {restClock <= 0 ? (
-        <div>
-          Match Time: {tl.minutes}:{tl.seconds}.{tl.tenths}
-        </div>
-      ) : (
-        <div>
-          Rest Time: {rt.minutes}:{rt.seconds}.{rt.tenths}{' '}
-        </div>
-      )}
+      {showTimeout ? <div>Timeout Time: {tt}</div> : undefined}
+      {restClock <= 0 ? <div>Match Time: {mt}</div> : <div>Rest Time: {rt}</div>}
+
       <div>Period: {period + 1 + periodBump}</div>
       <div className="ScorerScreen-teams">
         <TeamStatsView clock={matchClock} title={'White'} teamStats={globalState.white} />

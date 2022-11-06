@@ -372,4 +372,25 @@ describe('timeouts', () => {
 
     expect(state.white.timeoutsLeft).toEqual(0);
   });
+
+  it('should be "in timeout" for 1 min after', () => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [teamTimeout('white'), 1000],
+    );
+
+    expect(state.timers.timeoutTimer.at).toBeDefined();
+  });
+
+  it('should clear timeout when game starts again', () => {
+    const state = setup(
+      [startMatch, 1000], //
+      [pauseMatch, 1000],
+      [teamTimeout('white'), 1000],
+      [startMatch, 1000], //
+    );
+
+    expect(state.timers.timeoutTimer.at).toBeUndefined();
+  });
 });

@@ -137,14 +137,20 @@ export interface Timer {
   at?: TimeStamp;
   before: number;
 }
+
+export interface GlobalTimers {
+  matchTimer: Timer;
+  periodTimer: Timer;
+  restPeriodTimer: Timer;
+  timeoutTimer: Timer;
+}
+
 export interface GlobalState {
   period: number;
   white: TeamStats;
   blue: TeamStats;
 
-  matchTimer: Timer;
-  periodTimer: Timer;
-  restPeriodTimer: Timer;
+  timers: GlobalTimers;
 
   eventsToUndo: GameEventWithMatchTime[];
   deletedEvents: string[];
