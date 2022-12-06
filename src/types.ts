@@ -117,7 +117,6 @@ export interface Exclusion {
   cap: CapEnum;
   start: number;
   end: number;
-  showTimer?: true;
 }
 export interface OffenceCount {
   count: number;

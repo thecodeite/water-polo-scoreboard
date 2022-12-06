@@ -320,13 +320,16 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'exclusion': {
         const oldTeamState = oldState[event.team];
-        const newExclusion: Exclusion = {
-          id: event.id,
-          cap: event.cap,
-          start: event.matchTime,
-          end: event.matchTime + 20000,
-          showTimer: SupportStaff.includes(event.cap) ? undefined : true,
-        };
+        const newExclusion: Exclusion[] = SupportStaff.includes(event.cap)
+          ? []
+          : [
+              {
+                id: event.id,
+                cap: event.cap,
+                start: event.matchTime,
+                end: event.matchTime + 20000,
+              },
+            ];
         return {
           ...oldState,
           [event.team]: {
@@ -335,7 +338,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap),
             },
-            exclusions: [...oldTeamState.exclusions, newExclusion],
+            exclusions: [...oldTeamState.exclusions, ...newExclusion],
           },
         };
       }
@@ -354,17 +357,10 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'ems': {
         const oldTeamState = oldState[event.team];
-        const newExclusion: Exclusion = {
-          id: event.id,
-          cap: event.cap,
-          start: event.matchTime,
-          end: event.matchTime + 20000,
-        };
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [...oldTeamState.exclusions, newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap, { em: true }),
@@ -374,18 +370,22 @@ export function reduceState(events: GameEventWithMatchTime[]) {
       }
       case 'brutality': {
         const oldTeamState = oldState[event.team];
-        const newExclusion: Exclusion = {
-          id: event.id,
-          cap: event.cap,
-          start: event.matchTime,
-          end: event.matchTime + 4 * 60000,
-        };
+        const newExclusion: Exclusion[] = SupportStaff.includes(event.cap)
+          ? []
+          : [
+              {
+                id: event.id,
+                cap: event.cap,
+                start: event.matchTime,
+                end: event.matchTime + 4 * 60000,
+              },
+            ];
 
         return {
           ...oldState,
           [event.team]: {
             ...oldTeamState,
-            exclusions: [...oldTeamState.exclusions, newExclusion],
+            exclusions: [...oldTeamState.exclusions, ...newExclusion],
             offenceCount: {
               ...oldTeamState.offenceCount,
               [event.cap]: calcOffenceCount(oldTeamState, event.cap, { em: true }),
