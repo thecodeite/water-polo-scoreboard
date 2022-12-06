@@ -323,8 +323,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
-          start: event.periodTime,
-          end: event.periodTime + 20000,
+          start: event.matchTime,
+          end: event.matchTime + 20000,
           showTimer: SupportStaff.includes(event.cap) ? undefined : true,
         };
         return {
@@ -357,8 +357,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
-          start: event.periodTime,
-          end: event.periodTime + 20000,
+          start: event.matchTime,
+          end: event.matchTime + 20000,
         };
         return {
           ...oldState,
@@ -377,8 +377,8 @@ export function reduceState(events: GameEventWithMatchTime[]) {
         const newExclusion: Exclusion = {
           id: event.id,
           cap: event.cap,
-          start: event.periodTime,
-          end: event.periodTime + 4 * 60000,
+          start: event.matchTime,
+          end: event.matchTime + 4 * 60000,
         };
 
         return {

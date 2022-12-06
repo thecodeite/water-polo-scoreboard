@@ -39,17 +39,17 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
 
       <div>Period: {period + 1 + periodBump}</div>
       <div className="ScorerScreen-teams">
-        <TeamStatsView clock={matchClock} title={'White'} teamStats={globalState.white} />
-        <TeamStatsView clock={matchClock} title={'Blue'} teamStats={globalState.blue} />
+        <TeamStatsView matchClock={matchClock} title={'White'} teamStats={globalState.white} />
+        <TeamStatsView matchClock={matchClock} title={'Blue'} teamStats={globalState.blue} />
       </div>
     </div>
   );
 }
 
-function TeamStatsView({ clock, title, teamStats }: { clock: number; title: string; teamStats: TeamStats }) {
+function TeamStatsView({ matchClock, title, teamStats }: { matchClock: number; title: string; teamStats: TeamStats }) {
   const pens = teamStats.exclusions
-    .filter((p) => p.showTimer && p.end > clock) //
-    .map((p) => ({ ...p, t: p.end - clock }));
+    .filter((p) => p.showTimer && p.end > matchClock) //
+    .map((p) => ({ ...p, t: p.end - matchClock }));
   const cards = Object.entries(teamStats.offenceCount)
     .filter(([, oc]) => oc.card)
     .map(([cap, oc]) => ({ cap, colour: oc.card }));
