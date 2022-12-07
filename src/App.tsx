@@ -30,6 +30,7 @@ function App() {
       return undefined;
     }
   })();
+  const unPaused = !!globalState?.timers.matchTimer?.at;
   const addEvent = (newEvent: GameEvent) => setEvents((oldEvents) => [...oldEvents, newEvent]);
 
   const reset = () => {
@@ -37,7 +38,15 @@ function App() {
   };
 
   const plusTime = (time: number) => {
-    setEvents((oldEvents) => oldEvents.map((event) => ({ ...event, timestamp: event.timestamp - time })));
+    if (unPaused) {
+      setEvents((oldEvents) => oldEvents.map((event) => ({ ...event, timestamp: event.timestamp - time })));
+    } else {
+      setEvents((oldEvents) =>
+        oldEvents.map((event, i) =>
+          i < oldEvents.length - 1 ? { ...event, timestamp: event.timestamp - time } : event,
+        ),
+      );
+    }
   };
 
   const resetToNearEndOfPeriod = () => {
@@ -59,8 +68,6 @@ function App() {
       ),
     );
   };
-
-  const unPaused = !!globalState?.timers.matchTimer?.at;
 
   return (
     <div className="App">
