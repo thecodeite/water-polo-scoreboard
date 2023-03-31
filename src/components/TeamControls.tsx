@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty, teamTimeout } from '../events';
 import { calcTimes } from '../reducers';
 // import { calcTimes } from '../reducers';
-import { CapEnum, GameEvent, GlobalState, Team } from '../types';
+import { CapEnum, GameEvent, GlobalState, SupportStaff, Team } from '../types';
 import { Led } from './Led';
 
 import './TeamControls.scss';
@@ -95,8 +95,11 @@ function SingleTeamControls({
   //  const { matchTimer, periodTimer, restPeriodTimer } = globalState;
   //  const clock = calcTimes(matchTimer, periodTimer, restPeriodTimer);
 
-  const playerDisabled = (cap: CapEnum) => {
+  const playerDisabled = (cap: CapEnum, multiEvent: MultiEvent) => {
     if (disableControls) return true;
+
+    if (multiEvent === 'goal' && SupportStaff.includes(cap)) return true;
+
     // if (globalState[team].exclusions.some((e) => e.cap === cap && e.end > clock.matchClock)) return true;
     if (globalState[team].offenceCount[cap].noMoreEvents) return true;
     return false;
@@ -119,7 +122,7 @@ function SingleTeamControls({
           <div key={`cap-${cap}`}>
             <label>
               Press for {pressAction}{' '}
-              <button disabled={playerDisabled(cap)} onClick={() => tapCap(cap)}>
+              <button disabled={playerDisabled(cap, multiEvent)} onClick={() => tapCap(cap)}>
                 Cap {cap}
               </button>
             </label>{' '}
