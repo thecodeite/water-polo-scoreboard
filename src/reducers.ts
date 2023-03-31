@@ -368,7 +368,7 @@ export function reduceState(events: GameEventWithMatchTime[]) {
           },
         };
       }
-      case 'brutality': {
+      case 'violent-action': {
         const oldTeamState = oldState[event.team];
         const newExclusion: Exclusion[] = SupportStaff.includes(event.cap)
           ? []

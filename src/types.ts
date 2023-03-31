@@ -67,8 +67,8 @@ export interface EmsEvent extends GameEventCap {
   name: 'ems';
 }
 
-export interface BrutalityEvent extends GameEventCap {
-  name: 'brutality';
+export interface ViolentActionEvent extends GameEventCap {
+  name: 'violent-action';
 }
 
 /* Team events */
@@ -96,7 +96,7 @@ export type GameEvent =
   | PenaltyEvent
   | EmEvent
   | EmsEvent
-  | BrutalityEvent
+  | ViolentActionEvent
   | TimeoutEvent
   | RestStartEvent
   | PeriodEndEvent

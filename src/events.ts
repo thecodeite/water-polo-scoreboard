@@ -1,6 +1,6 @@
 import { ulid } from 'ulid';
 import {
-  BrutalityEvent,
+  ViolentActionEvent,
   CapEnum,
   EmEvent,
   EmsEvent,
@@ -89,10 +89,10 @@ export function capEms(team: Team, cap: CapEnum): EmsEvent {
   };
 }
 
-export function capBrutality(team: Team, cap: CapEnum): BrutalityEvent {
+export function capViolentAction(team: Team, cap: CapEnum): ViolentActionEvent {
   return {
     ...baseEvent(),
-    name: 'brutality',
+    name: 'violent-action',
     team,
     cap,
   };

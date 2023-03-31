@@ -7,7 +7,7 @@ import {
   startMatch,
   undoEvents,
   capEms,
-  capBrutality,
+  capViolentAction,
   capPenalty,
   teamTimeout,
 } from './events';
@@ -192,9 +192,9 @@ describe('exclusions', () => {
     it.todo('define what it should do, red flag?');
   });
 
-  describe('when a Brutality event is recorded', () => {
-    const brutalityCapOne = () => {
-      const exclude = capBrutality('white', CapEnum.One);
+  describe('when a ViolentAction event is recorded', () => {
+    const violentActionCapOne = () => {
+      const exclude = capViolentAction('white', CapEnum.One);
       return setup(
         [startMatch, 1500], //
         [pauseMatch, 1000],
@@ -202,19 +202,19 @@ describe('exclusions', () => {
       );
     };
     it('the exclusion should be recorded in the teams exclusions', () => {
-      const state = brutalityCapOne();
+      const state = violentActionCapOne();
       const exclusion = state.white.exclusions[0];
       expect(exclusion.cap).toEqual(CapEnum.One);
     });
 
     it('the exclusion should start when the match was paused (1500 ms)', () => {
-      const state = brutalityCapOne();
+      const state = violentActionCapOne();
       const exclusion = state.white.exclusions[0];
       expect(exclusion.start).toEqual(1500);
     });
 
     it('the exclusion should end 4 minutes (240,000 ms) after the offence started (241,500 ms)', () => {
-      const state = brutalityCapOne();
+      const state = violentActionCapOne();
       const exclusion = state.white.exclusions[0];
       expect(exclusion.end).toEqual(241500);
     });
@@ -345,7 +345,7 @@ describe('offences', () => {
   const eventsThatCountAsRedCard: { n: string; f: (a: Team, b: CapEnum) => GameEvent }[] = [
     { n: 'ems', f: capEms },
     { n: 'em', f: capEm },
-    { n: 'brutality', f: capBrutality },
+    { n: 'violent-action', f: capViolentAction },
   ];
 
   it.each(eventsThatCountAsRedCard)('should give a red card for a $n', ({ f }) => {

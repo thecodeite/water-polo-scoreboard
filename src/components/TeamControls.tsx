@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { capExclusion, capEm, capEms, goalScored, capBrutality, capPenalty, teamTimeout } from '../events';
+import { capExclusion, capEm, capEms, goalScored, capViolentAction, capPenalty, teamTimeout } from '../events';
 import { calcTimes } from '../reducers';
 // import { calcTimes } from '../reducers';
 import { CapEnum, GameEvent, GlobalState, SupportStaff, Team } from '../types';
@@ -58,7 +58,7 @@ export function TeamControls({
 
 const caps = Object.values(CapEnum);
 
-type MultiEvent = '' | 'goal' | 'penalty' | 'em' | 'ems' | 'brutality';
+type MultiEvent = '' | 'goal' | 'penalty' | 'em' | 'ems' | 'violent-action';
 
 function SingleTeamControls({
   addEvent,
@@ -86,8 +86,8 @@ function SingleTeamControls({
       addEvent(capEm(team, cap));
     } else if (multiEvent === 'ems') {
       addEvent(capEms(team, cap));
-    } else if (multiEvent === 'brutality') {
-      addEvent(capBrutality(team, cap));
+    } else if (multiEvent === 'violent-action') {
+      addEvent(capViolentAction(team, cap));
     }
     setMultiEvent('');
   };
@@ -111,7 +111,7 @@ function SingleTeamControls({
     penalty: 'Penalty by',
     em: 'Exclusion Misconduct (EM)',
     ems: 'Exclusion Misconduct with Substitute (EMS)',
-    brutality: 'brutality replacement for',
+    'violent-action': 'violent action replacement for',
   }[multiEvent];
 
   return (
@@ -170,8 +170,8 @@ function EventControls({
         <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="ems">
           EMS
         </MultiEventButton>
-        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="brutality">
-          Brutality
+        <MultiEventButton {...{ multiEvent, setMultiEvent, disableControls }} eventName="violent-action">
+          Violent Action
         </MultiEventButton>
       </div>
     </div>
