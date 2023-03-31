@@ -49,6 +49,7 @@ export function ScorerScreen({ globalState }: { globalState: GlobalState }) {
 function TeamStatsView({ matchClock, title, teamStats }: { matchClock: number; title: string; teamStats: TeamStats }) {
   const pens = teamStats.exclusions
     .filter((p) => p.end > matchClock) //
+    .sort((a, b) => a.cap.localeCompare(b.cap))
     .map((p) => ({ ...p, t: p.end - matchClock }));
   const cards = Object.entries(teamStats.offenceCount)
     .filter(([, oc]) => oc.card)
